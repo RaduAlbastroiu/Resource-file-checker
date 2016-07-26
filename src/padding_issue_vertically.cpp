@@ -8,7 +8,7 @@
 padding_issue_vertically::padding_issue_vertically(const widget &widget_a, const widget &widget_b, const int &distance) :
 	padding_issue(widget_a.Get_ID(), widget_b.Get_ID(), widget_a.Get_type(), widget_b.Get_type(), widget_a.Get_row(), widget_b.Get_row())
 {
-	m_distance = int_to_wstring(distance);
+	dist = distance;
 }
 vector<wstring> padding_issue_vertically::Create_message()
 {
@@ -41,7 +41,17 @@ vector<wstring> padding_issue_vertically::Create_message()
 	output_text.push_back(int_to_wstring(this->second.row));
 	output_text.push_back(L"\n");
 
-	output_text.push_back(L"\tSuggestion: Increase the vertical distance between them by " + m_distance + L"\n");
+	if (dist < 0)
+	{
+		dist = (-1)*dist;
+		m_distance = int_to_wstring(dist);
+		output_text.push_back(L"\tSuggestion: Decrease the vertical distance between them by " + m_distance + L"\n");
+	}
+	else
+	{
+		m_distance = int_to_wstring(dist);
+		output_text.push_back(L"\tSuggestion: Increase the vertical distance between them by " + m_distance + L"\n");
+	}
 
 	output_text.push_back(L"\n\n");
 

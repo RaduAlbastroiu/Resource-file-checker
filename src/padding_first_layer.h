@@ -32,5 +32,9 @@ protected:
 	*/
 	map<int, vector<widget>> createMap(const vector<widget> &controllers);
 
+	bool should_check(widget &A, widget &B);
+
+	int expected_vertical_distance(const widget &A, const widget &B);
+
 };
 

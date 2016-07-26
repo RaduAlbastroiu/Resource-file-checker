@@ -14,6 +14,9 @@ public:
 	padding_issue_vertically(const widget &widget_a, const widget &widget_b, const int &distance);
 
 private:
+
+	int dist;
+
 	virtual vector<wstring> Create_message() override;
 
 	wstring m_distance;

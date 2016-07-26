@@ -30,7 +30,26 @@ void padding_first_layer::check_padding_first_layer(Accumulator & Accumulate_Iss
 
 	Layer = createMap(dialogElements);
 
+	for (auto iter : Layer)
+	{
+		for (int i = 0; i < iter.second.size(); i++)
+		{
+			for (int j = 0; j < iter.second.size(); j++)
+			{
+				if (should_check(iter.second[i], iter.second[j]))
+				{
+					int expected = getExpectedVerticalDistance(getKey(iter.second[i]), getKey(iter.second[j]));
+					int real = computeVerticalDistance(iter.second[i], iter.second[j]);
 
+					if ( real != expected )
+					{
+						unique_ptr<Issue> pointer = make_unique< padding_issue_horizontally >(iter.second[i], iter.second[j], expected-real);
+						Accumulate_Issues.push_issue(move(pointer));
+					}
+				}
+			}
+		}
+	}
 }
 
 
@@ -64,3 +83,24 @@ map<int, vector<widget>> padding_first_layer::createMap(const vector<widget> &co
 
 	return leftColumns;
 }
+
+bool padding_first_layer::should_check(widget &A, widget &B)
+{
+	if (A.Is_browse_button() || B.Is_browse_button())
+		return false;
+
+	if (A.Get_deep() > 1 || B.Get_deep() > 1)
+		return false;
+
+	return true;
+}
+
+int padding_first_layer::expected_vertical_distance(const widget & A, const widget & B)
+{
+	int expected = getExpectedVerticalDistance(getKey(B), getKey(B));
+	int found = computeVerticalDistance(A, B);
+
+	if (expected == found)
+		return expected;
+}
+
