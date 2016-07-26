@@ -4,17 +4,28 @@
 #include "DlgFlags.h"
 #include "DlgFlagsIssue.h"
 
-DlgFlagsIssue::DlgFlagsIssue(DlgFlags::flag chosenFlag, DlgFlags::action chosenAction)
+DlgFlagsIssue::DlgFlagsIssue(vector < pair<DlgFlags::action, DlgFlags::flag> > suggestionsForFix):
+	suggestions(suggestionsForFix)
 {
-	flag	= flagToWstring(chosenFlag);
-	action	= actionToWstring(chosenAction);
 }
 
 vector<wstring> DlgFlagsIssue::Create_message() {
 
 	vector<wstring> outputText;
 
-	outputText.push_back(action + L" flag " + flag + L"\n\n");
+	// output indentation
+	wstring indentation = L"   ";
+
+	for (const auto &suggestion : suggestions) {
+
+		// convert the action and the flag from enum to wstring
+		wstring flag   = flagToWstring(suggestion.second);
+		wstring action = actionToWstring(suggestion.first);
+
+		// put them in the returned output text
+		outputText.push_back(indentation + action + L" flag " + flag + L"\n");
+	}
+	outputText.push_back(L"\n");
 
 	return outputText;
 }

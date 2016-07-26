@@ -8,15 +8,14 @@ class DlgFlagsIssue : public Issue {
 	
 	public:
 
-		DlgFlagsIssue(DlgFlags::flag chosenFlag, DlgFlags::action chosenAction);
+		//
+		DlgFlagsIssue(vector < pair<DlgFlags::action, DlgFlags::flag> > suggestionsForFix);
 		virtual vector<wstring> Create_message() override;
 
 	private:
 
-		// the action to be done ( add / remove a flag )
-		wstring action;
-		// the flag upon which the action will be performed
-		wstring flag;
+		//vector of suggestion for fixes
+		vector < pair<DlgFlags::action, DlgFlags::flag> > suggestions;
 
 		// converts the element from the enumeration "action" to wstring
 		wstring actionToWstring(DlgFlags::action chosenAction);

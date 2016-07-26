@@ -10,22 +10,24 @@ DlgFlags::DlgFlags(const Dialog_box &dlg) :
 {
 }
 
-unique_ptr<Issue> DlgFlags::createIssue(const flag &chosenFlag, const action &chosenAction) {
-	return make_unique <DlgFlagsIssue>(chosenFlag, chosenAction);
+unique_ptr<Issue> DlgFlags::createIssue(const vector < pair<DlgFlags::action, DlgFlags::flag> > &suggestions) {
+	return make_unique <DlgFlagsIssue>(suggestions);
 }
 
 void DlgFlags::validate(Accumulator &issueAccumulator) {
 	
+	vector < pair<DlgFlags::action, DlgFlags::flag> > suggestionsForFix;
+
 	// MODALFRAME + POPUP + CAPTION + WS_SYSMENU
 	if (dialog.hasFlagDS_MODALFRAME() && dialog.hasFlagWS_POPUP() && 
 		dialog.hasFlagWS_CAPTION() && dialog.hasFlagWS_SYSMENU()) {
 
 		// remove DS_MODALFRAME
-		issueAccumulator.push_issue(createIssue(flag::FLAG_DS_MODALFRAME, action::REMOVE));
+		suggestionsForFix.push_back(make_pair(action::REMOVE, flag::FLAG_DS_MODALFRAME));
 
 		// add WS_THICKFRAME if not defined
 		if (!dialog.hasFlagWS_THICKFRAME()) {
-			issueAccumulator.push_issue(createIssue(flag::FLAG_WS_THICKFRAME, action::ADD));
+			suggestionsForFix.push_back(make_pair(action::ADD, flag::FLAG_WS_THICKFRAME));
 		}
 
 		nrIssuesDlgFlags++;
@@ -33,12 +35,17 @@ void DlgFlags::validate(Accumulator &issueAccumulator) {
 	// POPUP + SYSMENU - CAPTION => CHILD
 	else if (dialog.hasFlagWS_POPUP() && dialog.hasFlagWS_SYSMENU() && !dialog.hasFlagWS_CAPTION()) {
 		// remove WS_POPMENU and WS_SYSMENU
-		issueAccumulator.push_issue(createIssue(flag::FLAG_WS_POPUP	 , action::REMOVE));
-		issueAccumulator.push_issue(createIssue(flag::FLAG_WS_SYSMENU, action::REMOVE));
+		suggestionsForFix.push_back(make_pair(action::REMOVE, flag::FLAG_WS_POPUP));
+		suggestionsForFix.push_back(make_pair(action::REMOVE, flag::FLAG_WS_SYSMENU));
 
 		// add WS_CHILD
-		issueAccumulator.push_issue(createIssue(flag::FLAG_WS_CHILD  , action::ADD));
+		suggestionsForFix.push_back(make_pair(action::ADD, flag::FLAG_WS_CHILD));
 
 		nrIssuesDlgFlags++;
+	}
+
+	// push the issues
+	if (!suggestionsForFix.empty()) {
+		issueAccumulator.push_issue(createIssue(suggestionsForFix));
 	}
 }

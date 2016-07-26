@@ -36,5 +36,5 @@ class DlgFlags : public Valid {
 		const Dialog_box &dialog;
 
 		// function for creating an a DlgFlagsIssue
-		unique_ptr<Issue> createIssue(const flag &chosenFlag, const action &chosenAction);
+		unique_ptr<Issue> createIssue(const vector < pair<DlgFlags::action, DlgFlags::flag> > &suggestions);
 };
