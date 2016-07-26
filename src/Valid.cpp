@@ -25,13 +25,13 @@ int Valid::nrissues_column_alignment = 0;
 int Valid::nrissues_standard_dimensions = 0;
 int Valid::nrissues_padding_vertically = 0;
 int Valid::nrissues_padding_horizontally = 0;
-int Valid::nrissues_sort = 0;
 int Valid::nrissues_padding_groupbox_top = 0;
 int Valid::nrissues_padding_groupbox_bot = 0;
 int Valid::nrissues_padding_groupbox_left = 0;
 int Valid::nrissues_padding_groupbox_right = 0;
 int Valid::nrissues_padding_typecontrol = 0;
 int Valid::nrIssuesDlgFlags = 0;
+int Valid::nrissues_sort = 0;
 
 vector<wstring> Valid::requested_validators{};
 bool Valid::customized_validation = false;

@@ -5,7 +5,6 @@
 #include "Issue.h"
 #include "Valid.h"
 #include "Accumulator.h"
-#include <map>
 
 
 class column_alignment : public Valid

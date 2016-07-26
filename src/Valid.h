@@ -42,7 +42,6 @@ class Valid
 		static int nrissues_rows;
 		static int nrissues_column_alignment;
 		static int nrissues_standard_dimensions;
-		static int nrissues_sort;
 		static int nrissues_padding_vertically;
 		static int nrissues_padding_horizontally;
 		static int nrissues_padding_groupbox_top;
@@ -51,6 +50,8 @@ class Valid
 		static int nrissues_padding_groupbox_right;
 		static int nrissues_padding_typecontrol;
 		static int nrIssuesDlgFlags;
+		static int nrissues_sort;
+
 
 		//data structures
 		vector<widget> Dialog_controllers;
@@ -94,13 +95,13 @@ class Valid
 		int Get_nrissues_standard_dimensions() { return nrissues_standard_dimensions; }
 		int Get_nrissues_padding_vertically() { return nrissues_padding_vertically; }
 		int Get_nrissues_padding_horizontally() { return nrissues_padding_horizontally; }
-		int Get_nrissues_sort() { return nrissues_sort; }
 		int Get_nrissues_padding_groupbox_top() { return nrissues_padding_groupbox_top; }
 		int Get_nrissues_padding_groupbox_bot() { return nrissues_padding_groupbox_bot; }
 		int Get_nrissues_padding_groupbox_left() { return nrissues_padding_groupbox_left; }
 		int Get_nrissues_padding_groupbox_right() { return nrissues_padding_groupbox_right; }
 		int Get_nrissues_padding_typecontrol() { return nrissues_padding_typecontrol; }
 		int getNrIssuesDlgFlags() { return nrIssuesDlgFlags; }
+		int Get_nrissues_sort() { return nrissues_sort; }
 
 		static void set_requested_validators(const vector<wstring> &validators);
 		static void set_customized_validation(const bool &validation);

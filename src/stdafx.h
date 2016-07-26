@@ -20,6 +20,7 @@
 #include <list>
 #include <algorithm>
 #include <string>
+#include <map>
 
 #include <cstring>
 
