@@ -49,7 +49,7 @@ class widget
 
 		//functions for setting and returning the depth of a widget
 		void Set_deep(int x) { this->deep = x; }
-		int Get_deep() { return this->deep; }
+		int Get_deep() const { return this->deep; }
 
 		//sets validation
 		void Set_valid(int x) { valid = x; }
