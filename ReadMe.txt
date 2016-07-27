@@ -50,5 +50,7 @@ Console arguments:
 - horizontal_alignment  ha
 - standard_dimensions 	sd
 - padding 		pd
+- dialog margins	dm
+- dialog flags		df
 
 /////////////////////////////////////////////////////////////////////////////
