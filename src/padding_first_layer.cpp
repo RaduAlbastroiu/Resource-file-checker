@@ -28,7 +28,7 @@ padding_first_layer::padding_first_layer(vector<widget>& dialog_elements)
 void padding_first_layer::check_padding_first_layer(Accumulator & Accumulate_Issues)
 {
 
-	Layer = createMap(dialogElements);
+	Layer = create_Map(dialogElements);
 
 	for (auto &iter : Layer)
 	{
@@ -57,7 +57,7 @@ void padding_first_layer::check_padding_first_layer(Accumulator & Accumulate_Iss
 }
 
 
-map<int, vector<widget>> padding_first_layer::createMap(const vector<widget> &controllers)
+map<int, vector<widget>> padding_first_layer::create_Map(const vector<widget> &controllers)
 {
 	map<int, vector<widget>> leftColumns;
 
@@ -90,6 +90,9 @@ map<int, vector<widget>> padding_first_layer::createMap(const vector<widget> &co
 
 bool padding_first_layer::should_check(const widget &A, const widget &B)
 {
+	if (A.Is_transparent() || B.Is_transparent())
+		return false;
+
 	if (A.Is_browse_button() || B.Is_browse_button())
 		return false;
 
@@ -119,6 +122,7 @@ bool padding_first_layer::expected_vertical_distance(const widget & A, const wid
 			iter.Get_left() == A.Get_left() &&
 			iter.Get_right() == A.Get_right())
 			continue;
+
 		if (iter.Get_top() == B.Get_top() &&
 			iter.Get_bottom() == B.Get_bottom() &&
 			iter.Get_left() == B.Get_left() &&
@@ -128,9 +132,14 @@ bool padding_first_layer::expected_vertical_distance(const widget & A, const wid
 		if (in_between_vertically(A, B, iter))
 			continue;
 
+		if (on_the_sides(A, B, iter))
+			continue;
+
 		return true;
 
 	}
+
+	return false;
 }
 
 bool padding_first_layer::in_between_vertically(const widget &A, const widget &B, const widget &C)
@@ -147,6 +156,15 @@ bool padding_first_layer::in_between_vertically(const widget &A, const widget &B
 	int right_final = (C.Get_right() < right) ? C.Get_right() : right;
 
 	if ((bot_final - top_final > 0) && (right_final - left_final > 0))
+		return true;
+
+	return false;
+}
+
+bool padding_first_layer::on_the_sides(const widget & A, const widget & B, const widget & C)
+{
+	if((C.Get_top() <= ( A.Get_top() < B.Get_top() ) ? A.Get_top() : B.Get_top()) &&
+		C.Get_bottom() >=  ( A.Get_bottom() > B.Get_bottom() ) ? A.Get_bottom() : B.Get_bottom())
 		return true;
 
 	return false;

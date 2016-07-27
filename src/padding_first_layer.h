@@ -32,7 +32,7 @@ protected:
 	widgets left aligned to that column (key).
 	For each layer a map will be created.
 	*/
-	map<int, vector<widget>> createMap(const vector<widget> &controllers);
+	map<int, vector<widget>> create_Map(const vector<widget> &controllers);
 
 	bool should_check(const widget &A, const widget &B);
 
@@ -43,6 +43,9 @@ protected:
 
 		// returns true if there is C in berween A and B
 		bool in_between_vertically(const widget &A, const widget &B, const widget &C);
+
+		// returns true if there is not a controller that is on the same line with both controllers
+		bool on_the_sides(const widget &A, const widget &B, const widget &C);
 
 };
 

@@ -28,8 +28,8 @@ void padding::check_padding(Dialog_box &dialog, Accumulator &Accumulate_Issues, 
 
 	// Check padding from the first to the last controller
 	// The issue is reported only if the distance is smaller than minimum
-	padding_for_min_distance obj(dialogElements);
-	obj.check_padding_for_min_distance(Accumulate_Issues);
+	//padding_for_min_distance obj(dialogElements);
+	//obj.check_padding_for_min_distance(Accumulate_Issues);
 
 	padding_first_layer first_layer(dialogElements);
 	first_layer.check_padding_first_layer(Accumulate_Issues);
@@ -40,15 +40,15 @@ void padding::check_padding(Dialog_box &dialog, Accumulator &Accumulate_Issues, 
 // Get the key for every type of widget
 int padding::getKey(const widget &element) {
 	return	element.isPushButton() ? KEY_PUSHBUTTON :
-		element.isDefPushButton() ? KEY_DEFPUSHBUTTON :
-		element.Is_checkbox() ? KEY_CHECKBOX :
-		element.Is_radio_button() ? KEY_RADIOBUTTON :
-		element.isTextLabel() ? KEY_TEXTLABEL :
-		element.isEditText() ? KEY_EDITTEXT :
-		element.Is_groupbox() ? KEY_GROUPBOX :
-		element.isListBox() ? KEY_LISTBOX :
-		element.Is_drop_list() ? KEY_DROPDOWNLIST :
-		KEY_IGNORED_CONTROLLER;
+				element.isDefPushButton() ? KEY_DEFPUSHBUTTON :
+					element.Is_checkbox() ? KEY_CHECKBOX :
+						element.Is_radio_button() ? KEY_RADIOBUTTON :
+							element.isTextLabel() ? KEY_TEXTLABEL :
+								element.isEditText() ? KEY_EDITTEXT :
+									element.Is_groupbox() ? KEY_GROUPBOX :
+										element.isListBox() ? KEY_LISTBOX :
+											element.Is_drop_list() ? KEY_DROPDOWNLIST :
+																		KEY_IGNORED_CONTROLLER;
 }
 
 
