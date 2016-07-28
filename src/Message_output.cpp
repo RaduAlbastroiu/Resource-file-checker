@@ -69,7 +69,8 @@ void Message_output::Nr_issues_type(Valid &v)
 	int groupbox = v.Get_nrissues_padding_groupbox_top() + v.Get_nrissues_padding_groupbox_bot() +
 		v.Get_nrissues_padding_groupbox_left() + v.Get_nrissues_padding_groupbox_right();
 	wcout << L"  Number of issues listed by type:\n";
-	wcout << L"    Dialog Flags:           " << v.getNrIssuesDlgFlags() << L"\n";
+	wcout << L"    Dialog Flags:           " << v.getNrIssuesDlgFlags() << L'\n';
+	wcout << L"    Dialog Margins          " << v.getNrIssuesDialogMargins() << L'\n';
 	wcout << L"    Dialog dimensions:      " << v.Get_nrissues_dialog_dim() << L"\n";
 	wcout << L"    Widget dimensions:      " << v.Get_nrissues_standard_dimensions() << L"\n";
 	wcout << L"    Partial overlapping:    " << v.Get_nrissues_partial_ol() << L"\n";

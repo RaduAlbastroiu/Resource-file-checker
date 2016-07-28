@@ -50,6 +50,7 @@ class Valid
 		static int nrissues_padding_groupbox_right;
 		static int nrissues_padding_typecontrol;
 		static int nrIssuesDlgFlags;
+		static int nrIssuesDialogMargins;
 		static int nrissues_sort;
 
 
@@ -100,7 +101,8 @@ class Valid
 		int Get_nrissues_padding_groupbox_left() { return nrissues_padding_groupbox_left; }
 		int Get_nrissues_padding_groupbox_right() { return nrissues_padding_groupbox_right; }
 		int Get_nrissues_padding_typecontrol() { return nrissues_padding_typecontrol; }
-		int getNrIssuesDlgFlags() { return nrIssuesDlgFlags; }
+		int getNrIssuesDlgFlags()		{ return nrIssuesDlgFlags; }
+		int getNrIssuesDialogMargins()	{ return nrIssuesDialogMargins; }
 		int Get_nrissues_sort() { return nrissues_sort; }
 
 		static void set_requested_validators(const vector<wstring> &validators);

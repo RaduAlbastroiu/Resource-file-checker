@@ -31,6 +31,7 @@ int Valid::nrissues_padding_groupbox_left = 0;
 int Valid::nrissues_padding_groupbox_right = 0;
 int Valid::nrissues_padding_typecontrol = 0;
 int Valid::nrIssuesDlgFlags = 0;
+int Valid::nrIssuesDialogMargins = 0;
 int Valid::nrissues_sort = 0;
 
 vector<wstring> Valid::requested_validators{};

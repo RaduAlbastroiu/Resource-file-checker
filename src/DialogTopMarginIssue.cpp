@@ -12,7 +12,7 @@ DialogTopMarginIssue::DialogTopMarginIssue(const int &currentMargin, const int &
 vector<wstring> DialogTopMarginIssue::Create_message() {
 
 	vector<wstring> outputText;
-	outputText.push_back(L"  Dialog right margin:    Found:" + current + L"     Expected: " + expected + 
+	outputText.push_back(L"  Dialog top margin:    Found:" + current + L"     Expected: " + expected + 
 						 L" or greater\n\n\n");
 
 	return outputText;

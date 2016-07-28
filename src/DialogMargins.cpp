@@ -72,6 +72,7 @@ void DialogMargins::validateLeftMargin(const int &currentMargin, Accumulator &is
 
 	if (expectedMargin != currentMargin) {
 		unique_ptr < Issue > pointer = make_unique < DialogLeftMarginIssue >(currentMargin, expectedMargin);
+		nrIssuesDialogMargins++;
 		issuesAccumulator.push_issue(move(pointer));
 	}
 }
@@ -81,6 +82,7 @@ void DialogMargins::validateRightMargin(const int &currentMargin, Accumulator &i
 
 	if (expectedMargin != currentMargin) {
 		unique_ptr < Issue > pointer = make_unique < DialogRightMarginIssue >(currentMargin, expectedMargin);
+		nrIssuesDialogMargins++;
 		issuesAccumulator.push_issue(move(pointer));
 	}
 }
@@ -90,12 +92,14 @@ void DialogMargins::validateTopMargin(const int &currentMargin, Accumulator &iss
 	if (dialog.isFrame()) {
 		if (currentMargin < FRAME_TOP_MARGIN) {
 			unique_ptr < Issue > pointer = make_unique < DialogTopMarginIssue >(currentMargin, FRAME_TOP_MARGIN);
+			nrIssuesDialogMargins++;
 			issuesAccumulator.push_issue(move(pointer));
 		}
 	}
 	else {
 		if (currentMargin < MODAL_TOP_MARGIN) {
 			unique_ptr < Issue > pointer = make_unique < DialogBottomMarginIssue >(currentMargin, MODAL_TOP_MARGIN);
+			nrIssuesDialogMargins++;
 			issuesAccumulator.push_issue(move(pointer));
 		}
 	}
@@ -105,12 +109,14 @@ void DialogMargins::validateBttomMargin(const int &currentMargin, Accumulator &i
 	if (dialog.isFrame()) {
 		if (currentMargin < FRAME_BOTTOM_MARGIN) {
 			unique_ptr < Issue > pointer = make_unique < DialogTopMarginIssue >(currentMargin, FRAME_BOTTOM_MARGIN);
+			nrIssuesDialogMargins++;
 			issuesAccumulator.push_issue(move(pointer));
 		}
 	}
 	else {
 		if (currentMargin < MODAL_BOTTOM_MARGIN) {
 			unique_ptr < Issue > pointer = make_unique < DialogBottomMarginIssue >(currentMargin, MODAL_BOTTOM_MARGIN);
+			nrIssuesDialogMargins++;
 			issuesAccumulator.push_issue(move(pointer));
 		}
 	}
