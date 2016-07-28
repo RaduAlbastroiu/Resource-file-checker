@@ -32,24 +32,25 @@ void padding_first_layer::check_padding_first_layer(Accumulator & Accumulate_Iss
 
 	for (auto &iter : Layer)
 	{
-		sort(iter.second.begin(), iter.second.end(),
-			[](const widget &A, const widget &B) { return A.Get_top() < B.Get_top(); });
-
-		for (int i = 0; i < iter.second.size() - 1; i++)
+		for (int i = 0; i < iter.second.size(); i++)
 		{
-			if (should_check(iter.second[i], iter.second[i + 1]))
+			for (int j = i + 1; j < iter.second.size(); j++)
 			{
-				int expected = getExpectedVerticalDistance(getKey(iter.second[i]), getKey(iter.second[i+1]));
-				int real = computeVerticalDistance(iter.second[i], iter.second[i+1]);
-				
-				if (expected_vertical_distance(iter.second[i], iter.second[i + 1]) &&
-					same_type(iter.second[i],iter.second[i+1]))
+				if (should_check(iter.second[i], iter.second[j]))
 				{
-					nrissues_padding_vertically++;
+					int expected = getExpectedVerticalDistance(getKey(iter.second[i]), getKey(iter.second[j]));
+					int real = computeVerticalDistance(iter.second[i], iter.second[j]);
 
-					unique_ptr<Issue> pointer = make_unique< padding_issue_horizontally >(iter.second[i], iter.second[i + 1], expected - real);
+					if (expected > 0 &&
+						expected_vertical_distance(iter.second[i], iter.second[j]) &&
+						same_type(iter.second[i], iter.second[j]))
+					{
+						nrissues_padding_vertically++;
 
-					Accumulate_Issues.push_issue(move(pointer));
+						unique_ptr<Issue> pointer = make_unique< padding_issue_vertically >(iter.second[i], iter.second[j], expected - real);
+
+						Accumulate_Issues.push_issue(move(pointer));
+					}
 				}
 			}
 		}
@@ -67,7 +68,7 @@ map<int, vector<widget>> padding_first_layer::create_Map(const vector<widget> &c
 	for (const auto &controller : controllers) {
 
 		//Browse buttons, pushbuttons, defpushbuttons and groupboxes are ignored.
-		if (!controller.Is_browse_button() && !controller.isPushButton() && !controller.isDefPushButton() && !controller.Is_transparent()) {
+		if (!controller.Is_browse_button() && !controller.Is_transparent()) {
 			int key = controller.Get_left();
 			leftColumns[key].push_back(controller);
 		}
@@ -130,16 +131,26 @@ bool padding_first_layer::expected_vertical_distance(const widget & A, const wid
 			continue;
 
 		if (in_between_vertically(A, B, iter))
-			continue;
-
+			return false;
+		
 		if (on_the_sides(A, B, iter))
-			continue;
-
-		return true;
+			return false;
 
 	}
 
-	return false;
+	return true;
+}
+
+bool padding_first_layer::same_type(const widget & A, const widget & B)
+{
+	// special case for defpushbutton and pushbutton
+	if ((A.isDefPushButton() && B.isPushButton()) || (A.isPushButton() && B.isDefPushButton()))
+		return true;
+
+	if ((A.Is_drop_list() && B.isEditText()) || (A.isEditText() && B.Is_drop_list()))
+		return true;
+
+	return A.Get_type() == B.Get_type(); 
 }
 
 bool padding_first_layer::in_between_vertically(const widget &A, const widget &B, const widget &C)
@@ -165,8 +176,8 @@ bool padding_first_layer::on_the_sides(const widget & A, const widget & B, const
 {
 	if((C.Get_top() <= ( A.Get_top() < B.Get_top() ) ? A.Get_top() : B.Get_top()) &&
 		C.Get_bottom() >=  ( A.Get_bottom() > B.Get_bottom() ) ? A.Get_bottom() : B.Get_bottom())
-		return true;
+		return false;
 
-	return false;
+	return true;
 }
 

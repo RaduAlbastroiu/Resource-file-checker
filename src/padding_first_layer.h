@@ -39,7 +39,7 @@ protected:
 	bool expected_vertical_distance(const widget &A, const widget &B);
 
 		// returns true if the widgets are the same type
-		bool same_type(const widget &A, const widget & B) { return A.Get_type() == B.Get_type(); }
+		bool same_type(const widget &A, const widget & B);
 
 		// returns true if there is C in berween A and B
 		bool in_between_vertically(const widget &A, const widget &B, const widget &C);

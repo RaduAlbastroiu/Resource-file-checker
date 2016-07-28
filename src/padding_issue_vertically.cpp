@@ -20,7 +20,7 @@ vector<wstring> padding_issue_vertically::Create_message()
 	output_text.push_back(L"  The following two controllers have a vertical padding issue:\n");
 
 	//controller 1
-	output_text.push_back(L"    First controller: ");
+	output_text.push_back(L"    First controller : ");
 	output_text.push_back(type);
 	output_text.push_back(first.type);
 	output_text.push_back(L" ");
