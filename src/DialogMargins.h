@@ -43,6 +43,10 @@ class DialogMargins : public Valid {
 		int getCurrentTopMargin();
 		int getCurrentBottomMargin();
 
+		// returns true if the margins are ok, for either frame or modal dialog
+		// it does not consider flags
+		bool areOKMargins(int leftMargin, int rightMargin, int topMargin, int bottomMargin);
+
 		// functions for validating each margin
 		void validateLeftMargin(const int &currentMargin, Accumulator &issuesAccumulator);
 		void validateRightMargin(const int &currentMargin, Accumulator &issuesAccumulator);

@@ -67,6 +67,14 @@ int DialogMargins::getCurrentBottomMargin() {
 	return dialog.Get_height() - getLowermost().Get_bottom();
 }
 
+bool DialogMargins::areOKMargins(int leftMargin, int rightMargin, int topMargin, int bottomMargin) {
+	return (leftMargin == FRAME_LEFT_MARGIN && rightMargin  == FRAME_RIGHT_MARGIN &&
+			topMargin  >= FRAME_TOP_MARGIN  && bottomMargin >= FRAME_BOTTOM_MARGIN)
+			||
+		   (leftMargin == MODAL_LEFT_MARGIN && rightMargin  == MODAL_RIGHT_MARGIN &&
+			topMargin  == MODAL_TOP_MARGIN  && bottomMargin == MODAL_BOTTOM_MARGIN);
+}
+
 void DialogMargins::validateLeftMargin(const int &currentMargin, Accumulator &issuesAccumulator) {
 	int expectedMargin = dialog.isFrame() ? FRAME_LEFT_MARGIN : MODAL_LEFT_MARGIN;
 
@@ -97,8 +105,8 @@ void DialogMargins::validateTopMargin(const int &currentMargin, Accumulator &iss
 		}
 	}
 	else {
-		if (currentMargin < MODAL_TOP_MARGIN) {
-			unique_ptr < Issue > pointer = make_unique < DialogBottomMarginIssue >(currentMargin, MODAL_TOP_MARGIN);
+		if (currentMargin != MODAL_TOP_MARGIN) {
+			unique_ptr < Issue > pointer = make_unique < DialogTopMarginIssue >(currentMargin, MODAL_TOP_MARGIN);
 			nrIssuesDialogMargins++;
 			issuesAccumulator.push_issue(move(pointer));
 		}
@@ -108,13 +116,13 @@ void DialogMargins::validateTopMargin(const int &currentMargin, Accumulator &iss
 void DialogMargins::validateBttomMargin(const int &currentMargin, Accumulator &issuesAccumulator) {
 	if (dialog.isFrame()) {
 		if (currentMargin < FRAME_BOTTOM_MARGIN) {
-			unique_ptr < Issue > pointer = make_unique < DialogTopMarginIssue >(currentMargin, FRAME_BOTTOM_MARGIN);
+			unique_ptr < Issue > pointer = make_unique < DialogBottomMarginIssue >(currentMargin, FRAME_BOTTOM_MARGIN);
 			nrIssuesDialogMargins++;
 			issuesAccumulator.push_issue(move(pointer));
 		}
 	}
 	else {
-		if (currentMargin < MODAL_BOTTOM_MARGIN) {
+		if (currentMargin != MODAL_BOTTOM_MARGIN) {
 			unique_ptr < Issue > pointer = make_unique < DialogBottomMarginIssue >(currentMargin, MODAL_BOTTOM_MARGIN);
 			nrIssuesDialogMargins++;
 			issuesAccumulator.push_issue(move(pointer));
@@ -135,9 +143,12 @@ void DialogMargins::validate(Accumulator &issuesAccumulator) {
 	int currentTopMargin    = getCurrentTopMargin();
 	int currentBottomMargin = getCurrentBottomMargin();
 
+	if (areOKMargins(currentLeftMargin, currentRightMargin, currentTopMargin, currentBottomMargin))
+		return;
+
 	// validations for each margin
 	validateLeftMargin(currentLeftMargin, issuesAccumulator);
 	validateRightMargin(currentRightMargin, issuesAccumulator);
 	validateTopMargin(currentTopMargin, issuesAccumulator);
-	validateRightMargin(currentRightMargin, issuesAccumulator);
+	validateBttomMargin(currentBottomMargin, issuesAccumulator);
 }
