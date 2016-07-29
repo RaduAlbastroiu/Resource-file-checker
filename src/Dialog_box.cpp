@@ -14,11 +14,14 @@ Dialog_box::Dialog_box(const Dialog_box &dialog):
 	height(dialog.height), row(dialog.row), tested(dialog.tested)
 {
 	flagWS_THICKFRAME = dialog.flagWS_THICKFRAME;
-	flagWS_CHILD = dialog.flagWS_CHILD;
-	flagWS_SYSMENU = dialog.flagWS_SYSMENU;
-	flagWS_CAPTION = dialog.flagWS_CAPTION;
-	flagWS_POPUP = dialog.flagWS_POPUP;
+	flagWS_CHILD      = dialog.flagWS_CHILD;
+	flagWS_SYSMENU	  = dialog.flagWS_SYSMENU;
+	flagWS_CAPTION	  = dialog.flagWS_CAPTION;
+	flagWS_POPUP	  = dialog.flagWS_POPUP;
 	flagDS_MODALFRAME = dialog.flagDS_MODALFRAME;
+	flagWS_BORDER	  = dialog.flagWS_BORDER;
+	flagWS_VSCROLL    = dialog.flagWS_VSCROLL;
+	flagWS_HSCROLL    = dialog.flagWS_HSCROLL;
 }
 
 Dialog_box::Dialog_box(Parsare &OBJ)
@@ -72,7 +75,8 @@ void Dialog_box::setFlags(const wstring &Line) {
 	flagWS_POPUP			= (Line.find(L"WS_POPUP")		!= wstring::npos ? true : flagWS_POPUP);
 	flagDS_MODALFRAME		= (Line.find(L"DS_MODALFRAME")	!= wstring::npos ? true : flagDS_MODALFRAME);
 	flagWS_BORDER			= (Line.find(L"WS_BORDER")		!= wstring::npos ? true : flagWS_BORDER);
-	flagWS_SCROLL			= (Line.find(L"WS_SCROLL")		!= wstring::npos ? true : flagWS_SCROLL);
+	flagWS_VSCROLL			= (Line.find(L"WS_VSCROLL")		!= wstring::npos ? true : flagWS_VSCROLL);
+	flagWS_HSCROLL			= (Line.find(L"WS_HSCROLL")		!= wstring::npos ? true : flagWS_HSCROLL);
 }
 
 bool Dialog_box::isFrame() {
