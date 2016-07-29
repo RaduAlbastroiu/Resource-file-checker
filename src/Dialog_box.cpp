@@ -72,6 +72,7 @@ void Dialog_box::setFlags(const wstring &Line) {
 	flagWS_POPUP			= (Line.find(L"WS_POPUP")		!= wstring::npos ? true : flagWS_POPUP);
 	flagDS_MODALFRAME		= (Line.find(L"DS_MODALFRAME")	!= wstring::npos ? true : flagDS_MODALFRAME);
 	flagWS_BORDER			= (Line.find(L"WS_BORDER")		!= wstring::npos ? true : flagWS_BORDER);
+	flagWS_SCROLL			= (Line.find(L"WS_SCROLL")		!= wstring::npos ? true : flagWS_SCROLL);
 }
 
 bool Dialog_box::isFrame() {

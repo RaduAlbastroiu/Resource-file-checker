@@ -20,6 +20,9 @@
 #define MODAL_TOP_MARGIN 7
 #define MODAL_BOTTOM_MARGIN 7
 
+// the size of scroll
+#define SCROLL_SIZE 11
+
 class DialogMargins : public Valid {
 	public :
 		DialogMargins(const Dialog_box &currentDialog, const vector<widget> &dialogWidgets);

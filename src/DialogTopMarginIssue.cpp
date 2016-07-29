@@ -3,8 +3,13 @@
 #include "widget.h"
 #include "Issue.h"
 #include "DialogTopMarginIssue.h"
+#include "DialogMargins.h"
 
 DialogTopMarginIssue::DialogTopMarginIssue(const int &currentMargin, const int &expectedMargin) {
+
+	// for a frame dialog (not modal) the margin can be greater
+	greater = (expectedMargin != MODAL_TOP_MARGIN ? L" or greater" : L"");
+
 	current = int_to_wstring(currentMargin);
 	expected = int_to_wstring(expectedMargin);
 }
@@ -12,8 +17,9 @@ DialogTopMarginIssue::DialogTopMarginIssue(const int &currentMargin, const int &
 vector<wstring> DialogTopMarginIssue::Create_message() {
 
 	vector<wstring> outputText;
+
 	outputText.push_back(L"  Dialog top margin:    Found:" + current + L"     Expected: " + expected + 
-						 L" or greater\n\n\n");
+						 greater + L"\n\n\n");
 
 	return outputText;
 }

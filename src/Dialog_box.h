@@ -26,9 +26,10 @@ class Dialog_box
 		bool flagWS_POPUP      = false;
 		bool flagDS_MODALFRAME = false;
 		bool flagWS_BORDER	   = false;
+		bool flagWS_SCROLL	   = false;
 
 		// possible buttons of a modal dialog
-		bool buttonOK = false;
+		bool buttonOK	  = false;
 		bool buttonCancel = false;
 
 
@@ -70,6 +71,7 @@ class Dialog_box
 		bool hasFlagWS_POPUP()		 const { return flagWS_POPUP; }
 		bool hasFlagDS_MODALFRAME()  const { return flagDS_MODALFRAME; }
 		bool hasFlagWS_BORDER()		 const { return flagWS_BORDER; }
+		bool hasFlagWS_SCROLL()		 const { return flagWS_SCROLL; }
 
 		// functions for setting OK and Cancel buttons for modal frames
 		void setButtonOK()		{ buttonOK = true; }

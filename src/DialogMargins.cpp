@@ -47,7 +47,7 @@ widget DialogMargins::getUppermost() {
 widget DialogMargins::getLowermost() {
 	return *max_element(topLayerElems.begin(), topLayerElems.end(), 
 		[](const widget &w1, const widget &w2) {
-			return w1.Get_right() < w2.Get_right();
+			return w1.Get_bottom() < w2.Get_bottom();
 	});
 }
 
@@ -56,7 +56,9 @@ int DialogMargins::getCurrentLeftMargin() {
 }
 
 int DialogMargins::getCurrentRightMargin() {
-	return dialog.Get_width() - getRightmost().Get_right();
+	int margin = dialog.Get_width() - getRightmost().Get_right();
+	
+	return dialog.hasFlagWS_SCROLL() ? margin - SCROLL_SIZE : margin;
 }
 
 int DialogMargins::getCurrentTopMargin() {
@@ -64,7 +66,9 @@ int DialogMargins::getCurrentTopMargin() {
 }
 
 int DialogMargins::getCurrentBottomMargin() {
-	return dialog.Get_height() - getLowermost().Get_bottom();
+	int margin = dialog.Get_height() - getLowermost().Get_bottom();
+
+	return dialog.hasFlagWS_SCROLL() ? margin - SCROLL_SIZE : margin;
 }
 
 bool DialogMargins::areOKMargins(int leftMargin, int rightMargin, int topMargin, int bottomMargin) {
