@@ -135,8 +135,12 @@ void Valid::create_tree()
 
 	//changing the depth for the controllers with no father(their are childs of the dialog)
 	for (i = 0; i < n; i++)
+	{
 		if (!pointeri[i]->Has_father())
+		{
 			pointeri[i]->Set_deep(1);
+		}
+	}
 
 
 	//changing the depth for the other controllers relative to their father
@@ -144,9 +148,8 @@ void Valid::create_tree()
 	{
 		if (pointeri[i]->Has_father())
 		{
-			widget obj = pointeri[i]->Get_father();
-			int deep = obj.Get_deep();
-			pointeri[i]->Set_deep(deep);
+			int deep = pointeri[i]->Get_father().Get_deep();
+			pointeri[i]->Set_deep(deep+1);
 		}
 	}
 }

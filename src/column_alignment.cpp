@@ -31,10 +31,10 @@ map<int, vector<widget>> column_alignment::createMap(const vector<widget> &contr
 	/*
 	 Iterate through the elements of the map
 	*/
-	for (auto &leftColumn : leftColumns) {
+	for (auto &Column : leftColumns) {
 
 		//Sort each of the vectors in the map increasingly based on the top of the contained controllers.
-		sort(leftColumn.second.begin(), leftColumn.second.end(),
+		sort(Column.second.begin(), Column.second.end(),
 			[](const widget &w1, const widget &w2) {
 			return w1.Get_top() < w2.Get_top();
 		});
