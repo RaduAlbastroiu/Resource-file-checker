@@ -17,9 +17,14 @@ unique_ptr<Issue> DlgFlags::createIssue(const vector < pair<DlgFlags::action, Dl
 void DlgFlags::validate(Accumulator &issueAccumulator) {
 	
 	vector < pair<DlgFlags::action, DlgFlags::flag> > suggestionsForFix;
-
+	
+	// WS_CHILD + WS_SYSMENU
+	if (dialog.hasFlaWS_CHILD() && dialog.hasFlagWS_SYSMENU()) {
+		//remove WS_SYSMENU
+		suggestionsForFix.push_back(make_pair(action::REMOVE, flag::FLAG_WS_SYSMENU));
+	}
 	// MODALFRAME + POPUP + CAPTION + WS_SYSMENU
-	if (dialog.hasFlagDS_MODALFRAME() && dialog.hasFlagWS_POPUP() && 
+	else if (dialog.hasFlagDS_MODALFRAME() && dialog.hasFlagWS_POPUP() && 
 		dialog.hasFlagWS_CAPTION() && dialog.hasFlagWS_SYSMENU()) {
 
 		// remove DS_MODALFRAME
