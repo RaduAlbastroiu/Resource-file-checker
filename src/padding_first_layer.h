@@ -47,5 +47,9 @@ protected:
 		// returns true if there is not a controller that is on the same line with both controllers
 		bool on_the_sides(const widget &A, const widget &B, const widget &C);
 
+	// returns true if widgetB is contained in widgetA
+	bool overlapped_controllers(const widget &OBJ1, const widget OBJ2);
+
 };
+
 

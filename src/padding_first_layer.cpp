@@ -62,24 +62,22 @@ map<int, vector<widget>> padding_first_layer::create_Map(const vector<widget> &c
 {
 	map<int, vector<widget>> leftColumns;
 
-	/*
-	Put each widget in a bucket corresponding to its left column
-	*/
+	
+	// Put each widget in a bucket corresponding to its left column
 	for (const auto &controller : controllers) {
 
-		//Browse buttons, pushbuttons, defpushbuttons and groupboxes are ignored.
+		// Browse buttons, pushbuttons, defpushbuttons and groupboxes are ignored.
 		if (!controller.Is_browse_button() && !controller.Is_transparent()) {
 			int key = controller.Get_left();
 			leftColumns[key].push_back(controller);
 		}
 	}
 
-	/*
-	Iterate through the elements of the map
-	*/
+	
+	// Iterate through the elements of the map
 	for (auto &Column : leftColumns) {
 
-		//Sort each of the vectors in the map increasingly based on the top of the contained controllers.
+		// Sort each of the vectors in the map increasingly based on the top of the contained controllers.
 		sort(Column.second.begin(), Column.second.end(),
 			[](const widget &w1, const widget &w2) {
 			return w1.Get_top() < w2.Get_top();
@@ -91,6 +89,9 @@ map<int, vector<widget>> padding_first_layer::create_Map(const vector<widget> &c
 
 bool padding_first_layer::should_check(const widget &A, const widget &B)
 {
+	if (A.isTextLabel() || B.isTextLabel())
+		return false;
+
 	if (A.Is_transparent() || B.Is_transparent())
 		return false;
 
@@ -98,6 +99,9 @@ bool padding_first_layer::should_check(const widget &A, const widget &B)
 		return false;
 
 	if (A.Get_deep() > 1 || B.Get_deep() > 1)
+		return false;
+
+	if (overlapped_controllers(A, B))
 		return false;
 
 	return true;
@@ -111,6 +115,10 @@ bool padding_first_layer::expected_vertical_distance(const widget & A, const wid
 	// if the distance is good
 	if (expected == found)
 		return false;
+
+	if (A.Get_type() == L"CONTROL" && B.Get_type() == L"CONTROL")
+		if ((found >= expected) && (found <= expected + 3))
+			return false;
 	
 	// if the distance is too big
 	if (found > MAX_COMPARISON_DISTANCE)
@@ -181,3 +189,17 @@ bool padding_first_layer::on_the_sides(const widget & A, const widget & B, const
 	return true;
 }
 
+// returns true if widgetB is contained in widgetA
+bool padding_first_layer::overlapped_controllers(const widget & OBJ1, const widget OBJ2)
+{
+	// creating the rectangle in between two widgets
+	int top = (OBJ1.Get_top()    > OBJ2.Get_top()) ? OBJ1.Get_top() : OBJ2.Get_top();
+	int bot = (OBJ1.Get_bottom() < OBJ2.Get_bottom()) ? OBJ1.Get_bottom() : OBJ2.Get_bottom();
+	int left = (OBJ1.Get_left()   > OBJ2.Get_left()) ? OBJ1.Get_left() : OBJ2.Get_left();
+	int right = (OBJ1.Get_right()  < OBJ2.Get_right()) ? OBJ1.Get_right() : OBJ2.Get_right();
+
+	if (bot - top > 0 && right - left > 0)
+		return true;
+
+	return false;
+}
