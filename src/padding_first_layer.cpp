@@ -138,15 +138,20 @@ bool padding_first_layer::is_on_white_list(const widget & A, const widget & B)
 
 		if (in_between_vertically(A, B, iter))
 			return false;
-
-		if (on_the_sides(A, B, iter))
-			return false;
+		
+		if (iter.Get_type() == L"CONTROL" &&
+			(A.isPushButton() || A.isDefPushButton()) &&
+			(B.isPushButton() || B.isDefPushButton()))
+		{
+			if (on_the_sides(A, B, iter))
+				return false;
+		}
 
 	}
 
 	// returns true if the widgets are aligned each with another editext or drop down list
-	if ((A.Is_checkbox() || A.Is_radio_button()) &&
-		B.Is_checkbox() || B.Is_radio_button())
+	if ((A.Is_checkbox() || A.Is_radio_button() || A.isTextLabel()) &&
+		B.Is_checkbox() || B.Is_radio_button() || B.isTextLabel())
 	{
 		if (horizontally_aligned_widgets(A, B))
 			return false;
@@ -188,11 +193,14 @@ bool padding_first_layer::in_between_vertically(const widget &A, const widget &B
 
 bool padding_first_layer::on_the_sides(const widget & A, const widget & B, const widget & C)
 {
-	if((C.Get_top() <= ( A.Get_top() < B.Get_top() ) ? A.Get_top() : B.Get_top()) &&
-		C.Get_bottom() >=  ( A.Get_bottom() > B.Get_bottom() ) ? A.Get_bottom() : B.Get_bottom())
-		return false;
+	int min_top = A.Get_top() < B.Get_top() ? A.Get_top() : B.Get_top();
+	int max_bot = A.Get_bottom() > B.Get_bottom() ? A.Get_bottom() : B.Get_bottom();
+	
+	if (C.Get_top() <= min_top &&
+		C.Get_bottom() >= max_bot)
+		return true;
 
-	return true;
+	return false;
 }
 
 bool padding_first_layer::horizontally_aligned_widgets(const widget & A, const widget & B)
