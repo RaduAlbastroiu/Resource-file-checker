@@ -56,9 +56,11 @@ int DialogMargins::getCurrentLeftMargin() {
 }
 
 int DialogMargins::getCurrentRightMargin() {
+
+	widget X = getRightmost();
 	int margin = dialog.Get_width() - getRightmost().Get_right();
 	
-	return dialog.hasFlagWS_SCROLL() ? margin - SCROLL_SIZE : margin;
+	return dialog.hasFlagWS_HSCROLL() ? margin - SCROLL_SIZE : margin;
 }
 
 int DialogMargins::getCurrentTopMargin() {
@@ -68,7 +70,7 @@ int DialogMargins::getCurrentTopMargin() {
 int DialogMargins::getCurrentBottomMargin() {
 	int margin = dialog.Get_height() - getLowermost().Get_bottom();
 
-	return dialog.hasFlagWS_SCROLL() ? margin - SCROLL_SIZE : margin;
+	return dialog.hasFlagWS_VSCROLL() ? margin - SCROLL_SIZE : margin;
 }
 
 bool DialogMargins::areOKMargins(int leftMargin, int rightMargin, int topMargin, int bottomMargin) {
