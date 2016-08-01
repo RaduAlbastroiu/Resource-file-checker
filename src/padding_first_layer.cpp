@@ -42,7 +42,7 @@ void padding_first_layer::check_padding_first_layer(Accumulator & Accumulate_Iss
 					int real = computeVerticalDistance(iter.second[i], iter.second[j]);
 
 					if (expected > 0 &&
-						expected_vertical_distance(iter.second[i], iter.second[j]) &&
+						is_on_white_list(iter.second[i], iter.second[j]) &&
 						same_type(iter.second[i], iter.second[j]))
 					{
 						nrissues_padding_vertically++;
@@ -89,9 +89,6 @@ map<int, vector<widget>> padding_first_layer::create_Map(const vector<widget> &c
 
 bool padding_first_layer::should_check(const widget &A, const widget &B)
 {
-	if (A.isTextLabel() || B.isTextLabel())
-		return false;
-
 	if (A.Is_transparent() || B.Is_transparent())
 		return false;
 
@@ -107,7 +104,7 @@ bool padding_first_layer::should_check(const widget &A, const widget &B)
 	return true;
 }
 
-bool padding_first_layer::expected_vertical_distance(const widget & A, const widget & B)
+bool padding_first_layer::is_on_white_list(const widget & A, const widget & B)
 {
 	int expected = getExpectedVerticalDistance(getKey(B), getKey(B));
 	int found = computeVerticalDistance(A, B);
@@ -116,10 +113,11 @@ bool padding_first_layer::expected_vertical_distance(const widget & A, const wid
 	if (expected == found)
 		return false;
 
-	if (A.Get_type() == L"CONTROL" && B.Get_type() == L"CONTROL")
+	if ((A.Is_checkbox() || A.Is_radio_button()) &&
+		B.Is_checkbox() || B.Is_radio_button())
 		if ((found >= expected) && (found <= expected + 3))
 			return false;
-	
+
 	// if the distance is too big
 	if (found > MAX_COMPARISON_DISTANCE)
 		return false;
@@ -140,10 +138,18 @@ bool padding_first_layer::expected_vertical_distance(const widget & A, const wid
 
 		if (in_between_vertically(A, B, iter))
 			return false;
-		
+
 		if (on_the_sides(A, B, iter))
 			return false;
 
+	}
+
+	// returns true if the widgets are aligned each with another editext or drop down list
+	if ((A.Is_checkbox() || A.Is_radio_button()) &&
+		B.Is_checkbox() || B.Is_radio_button())
+	{
+		if (horizontally_aligned_widgets(A, B))
+			return false;
 	}
 
 	return true;
@@ -187,6 +193,44 @@ bool padding_first_layer::on_the_sides(const widget & A, const widget & B, const
 		return false;
 
 	return true;
+}
+
+bool padding_first_layer::horizontally_aligned_widgets(const widget & A, const widget & B)
+{
+	bool element_a = false;
+	bool element_b = false;
+	
+	for (auto const &iter : dialogElements)
+	{
+		// the controller should be edittext or combobox
+		if (!iter.isEditText() && !iter.Is_drop_list())
+			continue;
+
+		if (element_a == false && same_mid_line(iter, A))
+			element_a = true;
+
+		if (element_b == false && same_mid_line(iter, B))
+			element_b = true;
+	}
+
+	if (element_a && element_b)
+		return true;
+
+	return false;
+}
+
+bool padding_first_layer::same_mid_line(const widget & OBJ1, const widget & OBJ2)
+{
+	// extract only usefull data from widget 1 and 2
+	int mid1 = (OBJ1.Get_bottom() - OBJ1.Get_top()) / 2 + OBJ1.Get_top();
+	int mid2 = (OBJ2.Get_bottom() - OBJ2.Get_top()) / 2 + OBJ2.Get_top();
+
+	// if good alignment -> return true
+	// if wrong ->  return false
+	if (mid1 == mid2)
+		return true;
+
+	return false;
 }
 
 // returns true if widgetB is contained in widgetA
