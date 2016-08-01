@@ -5,6 +5,10 @@
     |       -> manager for all the other validators
     |
     |
+    |------ dialog flags 	-> validates the flags of a dialog
+    |
+    |------ dialog margins	-> validates the margins of a dialog
+    |
     |------ dialog_dimensions   -> checks if the dialog is not out of bounds (checks the height and the width of the dialog)
     |   
     |------ partial_overlapping -> validates the dialog if there are no controllers that overlap partially (no error produced if one controller completely contains another)
@@ -44,13 +48,14 @@
 
 Console arguments:
 
+- dialog margins	dm
+- dialog flags		df
 - dialog_dimensions 	dd
 - partial_overlapping 	ol
 - column_alignment 	ca
 - horizontal_alignment  ha
 - standard_dimensions 	sd
 - padding 		pd
-- dialog margins	dm
-- dialog flags		df
+
 
 /////////////////////////////////////////////////////////////////////////////
