@@ -35,6 +35,7 @@ protected:
 
 	bool should_check(const widget &A, const widget &B);
 
+	// returns true if the controller is on the white list
 	bool is_on_white_list(const widget &A, const widget &B);
 
 		// returns true if the widgets are the same type

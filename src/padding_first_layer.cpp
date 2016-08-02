@@ -42,7 +42,7 @@ void padding_first_layer::check_padding_first_layer(Accumulator & Accumulate_Iss
 					int real = computeVerticalDistance(iter.second[i], iter.second[j]);
 
 					if (expected > 0 &&
-						is_on_white_list(iter.second[i], iter.second[j]) &&
+					   (!is_on_white_list(iter.second[i], iter.second[j])) &&
 						same_type(iter.second[i], iter.second[j]))
 					{
 						nrissues_padding_vertically++;
@@ -95,7 +95,10 @@ bool padding_first_layer::should_check(const widget &A, const widget &B)
 	if (A.Is_browse_button() || B.Is_browse_button())
 		return false;
 
-	if (A.Get_deep() > 1 || B.Get_deep() > 1)
+	//if (A.Get_deep() > 1 || B.Get_deep() > 1)
+		//return false;
+
+	if(A.Get_father_pointer() != B.Get_father_pointer())
 		return false;
 
 	if (overlapped_controllers(A, B))
@@ -111,16 +114,16 @@ bool padding_first_layer::is_on_white_list(const widget & A, const widget & B)
 
 	// if the distance is good
 	if (expected == found)
-		return false;
+		return true;
 
 	if ((A.Is_checkbox() || A.Is_radio_button()) &&
 		B.Is_checkbox() || B.Is_radio_button())
 		if ((found >= expected) && (found <= expected + 3))
-			return false;
+			return true;
 
 	// if the distance is too big
 	if (found > MAX_COMPARISON_DISTANCE)
-		return false;
+		return true;
 
 	for (auto const &iter : dialogElements)
 	{
@@ -137,14 +140,14 @@ bool padding_first_layer::is_on_white_list(const widget & A, const widget & B)
 			continue;
 
 		if (in_between_vertically(A, B, iter))
-			return false;
+			return true;
 		
 		if (iter.Get_type() == L"CONTROL" &&
 			(A.isPushButton() || A.isDefPushButton()) &&
 			(B.isPushButton() || B.isDefPushButton()))
 		{
 			if (on_the_sides(A, B, iter))
-				return false;
+				return true;
 		}
 
 	}
@@ -154,10 +157,10 @@ bool padding_first_layer::is_on_white_list(const widget & A, const widget & B)
 		B.Is_checkbox() || B.Is_radio_button() || B.isTextLabel())
 	{
 		if (horizontally_aligned_widgets(A, B))
-			return false;
+			return true;
 	}
 
-	return true;
+	return false;
 }
 
 bool padding_first_layer::same_type(const widget & A, const widget & B)
@@ -185,8 +188,10 @@ bool padding_first_layer::in_between_vertically(const widget &A, const widget &B
 	int left_final = (C.Get_left() > left) ? C.Get_left() : left;
 	int right_final = (C.Get_right() < right) ? C.Get_right() : right;
 
-	if ((bot_final - top_final > 0) && (right_final - left_final > 0))
-		return true;
+	if ((bot_final - top_final > 0) && (right_final - left_final > 0)) 
+		if(!overlapped_controllers(A,C))
+			if(!overlapped_controllers(B, C))
+				return true;
 
 	return false;
 }
