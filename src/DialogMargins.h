@@ -21,7 +21,8 @@
 #define MODAL_BOTTOM_MARGIN 7
 
 // the size of scroll
-#define SCROLL_SIZE 11
+#define VSCROLL_SIZE 11
+#define HSCROLL_SIZE 10
 
 class DialogMargins : public Valid {
 	public :
@@ -30,9 +31,6 @@ class DialogMargins : public Valid {
 
 
 	private:
-		// the dialog with its top layer elements
-		Dialog_box dialog;
-		vector<widget> topLayerElems;
 
 		// functions for getting the leftmost / rightmost / uppermost / lowermost widget
 		widget getLeftmost();
@@ -55,4 +53,36 @@ class DialogMargins : public Valid {
 		void validateRightMargin(const int &currentMargin, Accumulator &issuesAccumulator);
 		void validateTopMargin(const int &currentMargin, Accumulator &issuesAccumulator);
 		void validateBttomMargin(const int &currentMargin, Accumulator &issuesAccumulator);
+
+		// returns true if a margin is 0
+		bool hasAMargin0(const int &left, const int &right, const int &top, const int &bottom);
+
+		// checks the margins for each type of dialog
+		void checkMarginsForFrame(const int &left, const int &right, const int &top, const int &bottom);
+		void checkMarginsForModal(const int &left, const int &right, const int &top, const int &bottom);
+
+		// returns true if the number of margins of the dialog that respect the frame margins
+		// is larger or equal than the ones that respect the modal margins
+		bool hasFramePriority();
+
+		// validates the dialog as a frame
+		void validateAsFrame(const int &left, const int &right, const int &top, const int &bottom, Accumulator &issuesAccumulator);
+		// validates the dilog as a modal
+		void validateAsModal(const int &left, const int &right, const int &top, const int &bottom, Accumulator &issuesAccumulator);
+
+		// the dialog with its top layer elements
+		Dialog_box dialog;
+		vector<widget> topLayerElems;
+
+		// a variable will be true if the specific margin for frame is respected
+		bool leftMarginFrameOK;
+		bool rightMarginFrameOK;		
+		bool topMarginFrameOK;
+		bool bottomMarginFrameOK;
+		
+		// a variable will be true if the specific margin for modal is respected
+		bool leftMarginModalOK;
+		bool rightMarginModalOK;
+		bool topMarginModalOK;
+		bool bottomMarginModalOK;
 };

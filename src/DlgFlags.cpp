@@ -23,12 +23,12 @@ void DlgFlags::validate(Accumulator &issueAccumulator) {
 		// remove WS_SYSMENU
 		suggestionsForFix.push_back(make_pair(action::REMOVE, flag::FLAG_WS_SYSMENU));
 
-		// remove caption if found
+		// remove WS_CAPTION
 		if (dialog.hasFlagWS_CAPTION()) {
 			suggestionsForFix.push_back(make_pair(action::REMOVE, flag::FLAG_WS_CAPTION));
 		}
 
-		// remove thickframe and add modalframe instead
+		// remove WS_THICKFRAME and add DS_MODALFRAME instead
 		if (dialog.hasFlagWS_THICKFRAME()) {
 			suggestionsForFix.push_back(make_pair(action::REMOVE, flag::FLAG_WS_THICKFRAME));
 			suggestionsForFix.push_back(make_pair(action::ADD,	  flag::FLAG_DS_MODALFRAME));
@@ -45,8 +45,6 @@ void DlgFlags::validate(Accumulator &issueAccumulator) {
 		if (!dialog.hasFlagWS_THICKFRAME()) {
 			suggestionsForFix.push_back(make_pair(action::ADD, flag::FLAG_WS_THICKFRAME));
 		}
-
-		nrIssuesDlgFlags++;
 	}
 	// POPUP + SYSMENU - CAPTION => CHILD
 	else if (dialog.hasFlagWS_POPUP() && dialog.hasFlagWS_SYSMENU() && !dialog.hasFlagWS_CAPTION()) {
@@ -56,12 +54,13 @@ void DlgFlags::validate(Accumulator &issueAccumulator) {
 
 		// add WS_CHILD
 		suggestionsForFix.push_back(make_pair(action::ADD, flag::FLAG_WS_CHILD));
-
-		nrIssuesDlgFlags++;
 	}
 
 	// push the issues
 	if (!suggestionsForFix.empty()) {
 		issueAccumulator.push_issue(createIssue(suggestionsForFix));
+
+		// increment the number of issues
+		nrIssuesDlgFlags++;
 	}
 }

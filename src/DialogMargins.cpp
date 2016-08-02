@@ -60,7 +60,7 @@ int DialogMargins::getCurrentRightMargin() {
 	widget X = getRightmost();
 	int margin = dialog.Get_width() - getRightmost().Get_right();
 	
-	return dialog.hasFlagWS_HSCROLL() ? margin - SCROLL_SIZE : margin;
+	return dialog.hasFlagWS_HSCROLL() ? margin - VSCROLL_SIZE : margin;
 }
 
 int DialogMargins::getCurrentTopMargin() {
@@ -70,7 +70,7 @@ int DialogMargins::getCurrentTopMargin() {
 int DialogMargins::getCurrentBottomMargin() {
 	int margin = dialog.Get_height() - getLowermost().Get_bottom();
 
-	return dialog.hasFlagWS_VSCROLL() ? margin - SCROLL_SIZE : margin;
+	return dialog.hasFlagWS_VSCROLL() ? margin - HSCROLL_SIZE : margin;
 }
 
 bool DialogMargins::areOKMargins(int leftMargin, int rightMargin, int topMargin, int bottomMargin) {
@@ -136,6 +136,97 @@ void DialogMargins::validateBttomMargin(const int &currentMargin, Accumulator &i
 	}
 }
 
+bool DialogMargins::hasAMargin0(const int &left, const int &right, const int &top, const int &bottom) {
+	return (left == 0) || (right == 0) || (top == 0 )|| (bottom == 0);
+}
+
+void DialogMargins::checkMarginsForFrame(const int &left, const int &right, const int &top, const int &bottom) {
+
+	leftMarginFrameOK	 = (left    == FRAME_LEFT_MARGIN);
+	rightMarginFrameOK	 = (right	== FRAME_RIGHT_MARGIN);
+	topMarginFrameOK	 = (top		>= FRAME_BOTTOM_MARGIN);
+
+	// frame bottom margin does not matter so by assumption it will always
+	// be respected
+	bottomMarginFrameOK  = true;
+
+}
+
+void DialogMargins::checkMarginsForModal(const int &left, const int &right, const int &top, const int &bottom) {
+
+	leftMarginModalOK		= (left		== MODAL_LEFT_MARGIN);
+	rightMarginModalOK		= (right	== MODAL_RIGHT_MARGIN);
+	topMarginModalOK		= (top		== MODAL_TOP_MARGIN);
+	bottomMarginModalOK		= (bottom	== MODAL_BOTTOM_MARGIN);
+
+}
+
+bool DialogMargins::hasFramePriority() {
+	
+	int framePriority = (int)(leftMarginFrameOK + rightMarginFrameOK + topMarginFrameOK + bottomMarginFrameOK);
+	int modalPriority = (int)(leftMarginModalOK + rightMarginModalOK + topMarginModalOK + bottomMarginModalOK);
+
+	return framePriority > modalPriority;
+}
+
+void DialogMargins::validateAsFrame(const int &left, const int &right, const int &top, const int &bottom, Accumulator &issuesAccumulator) {
+	
+	// validates each margin as a frame margin and pushes a specific issue
+
+	if (!leftMarginFrameOK) {
+		unique_ptr < Issue > pointer = make_unique < DialogLeftMarginIssue >(left, FRAME_LEFT_MARGIN);
+		nrIssuesDialogMargins++;
+		issuesAccumulator.push_issue(move(pointer));
+	}
+
+	if (!rightMarginFrameOK) {
+		unique_ptr < Issue > pointer = make_unique < DialogRightMarginIssue >(right, FRAME_RIGHT_MARGIN);
+		nrIssuesDialogMargins++;
+		issuesAccumulator.push_issue(move(pointer));
+	}
+
+	if (!topMarginFrameOK) {
+		unique_ptr < Issue > pointer = make_unique < DialogTopMarginIssue >(top, FRAME_TOP_MARGIN);
+		nrIssuesDialogMargins++;
+		issuesAccumulator.push_issue(move(pointer));
+	}
+
+	if (!bottomMarginFrameOK) {
+		unique_ptr < Issue > pointer = make_unique < DialogBottomMarginIssue >(bottom, FRAME_BOTTOM_MARGIN);
+		nrIssuesDialogMargins++;
+		issuesAccumulator.push_issue(move(pointer));
+	}
+}
+
+void DialogMargins::validateAsModal(const int &left, const int &right, const int &top, const int &bottom, Accumulator &issuesAccumulator) {
+	
+	// validates each margin as a modal margin and pushes a specific issue
+
+	if (!leftMarginModalOK) {
+		unique_ptr < Issue > pointer = make_unique < DialogLeftMarginIssue >(left, MODAL_LEFT_MARGIN);
+		nrIssuesDialogMargins++;
+		issuesAccumulator.push_issue(move(pointer));
+	}
+
+	if (!rightMarginModalOK) {
+		unique_ptr < Issue > pointer = make_unique < DialogRightMarginIssue >(right, MODAL_RIGHT_MARGIN);
+		nrIssuesDialogMargins++;
+		issuesAccumulator.push_issue(move(pointer));
+	}
+
+	if (!topMarginModalOK) {
+		unique_ptr < Issue > pointer = make_unique < DialogTopMarginIssue >(top, MODAL_TOP_MARGIN);
+		nrIssuesDialogMargins++;
+		issuesAccumulator.push_issue(move(pointer));
+	}
+
+	if (!bottomMarginModalOK) {
+		unique_ptr < Issue > pointer = make_unique < DialogBottomMarginIssue >(bottom, MODAL_BOTTOM_MARGIN);
+		nrIssuesDialogMargins++;
+		issuesAccumulator.push_issue(move(pointer));
+	}
+}
+
 void DialogMargins::validate(Accumulator &issuesAccumulator) {
 
 	// there are dialogs with no elements
@@ -149,12 +240,31 @@ void DialogMargins::validate(Accumulator &issuesAccumulator) {
 	int currentTopMargin    = getCurrentTopMargin();
 	int currentBottomMargin = getCurrentBottomMargin();
 
-	if (areOKMargins(currentLeftMargin, currentRightMargin, currentTopMargin, currentBottomMargin))
+	if (areOKMargins(currentLeftMargin, currentRightMargin, currentTopMargin, currentBottomMargin) ||
+		hasAMargin0 (currentLeftMargin, currentRightMargin, currentTopMargin, currentBottomMargin)) {
 		return;
+	}
 
+	/*
+	// OLD IMPLEMENTATION (BASED ON FLAGS)
 	// validations for each margin
 	validateLeftMargin(currentLeftMargin, issuesAccumulator);
 	validateRightMargin(currentRightMargin, issuesAccumulator);
 	validateTopMargin(currentTopMargin, issuesAccumulator);
 	validateBttomMargin(currentBottomMargin, issuesAccumulator);
+	*/
+
+	// NEW IMPLEMENTATION FROM HERE ON
+
+	checkMarginsForFrame(currentLeftMargin, currentRightMargin, currentTopMargin, currentBottomMargin);
+	checkMarginsForModal(currentLeftMargin, currentRightMargin, currentTopMargin, currentBottomMargin);
+
+	if (hasFramePriority()) {
+		// validate the dialog as frame
+		validateAsFrame(currentLeftMargin, currentRightMargin, currentTopMargin, currentBottomMargin, issuesAccumulator);
+	}
+	else {
+		// validate the dialog as modal
+		validateAsModal(currentLeftMargin, currentRightMargin, currentTopMargin, currentBottomMargin, issuesAccumulator);
+	}
 }
