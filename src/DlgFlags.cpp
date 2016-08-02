@@ -18,10 +18,21 @@ void DlgFlags::validate(Accumulator &issueAccumulator) {
 	
 	vector < pair<DlgFlags::action, DlgFlags::flag> > suggestionsForFix;
 	
-	// WS_CHILD + WS_SYSMENU
+	// WS_CHILD + WS_SYSMENU ( + WS_CAPTION + WS_THICKFRAME / DS_MODALFRAME)
 	if (dialog.hasFlaWS_CHILD() && dialog.hasFlagWS_SYSMENU()) {
-		//remove WS_SYSMENU
+		// remove WS_SYSMENU
 		suggestionsForFix.push_back(make_pair(action::REMOVE, flag::FLAG_WS_SYSMENU));
+
+		// remove caption if found
+		if (dialog.hasFlagWS_CAPTION()) {
+			suggestionsForFix.push_back(make_pair(action::REMOVE, flag::FLAG_WS_CAPTION));
+		}
+
+		// remove thickframe and add modalframe instead
+		if (dialog.hasFlagWS_THICKFRAME()) {
+			suggestionsForFix.push_back(make_pair(action::REMOVE, flag::FLAG_WS_THICKFRAME));
+			suggestionsForFix.push_back(make_pair(action::ADD,	  flag::FLAG_DS_MODALFRAME));
+		}
 	}
 	// MODALFRAME + POPUP + CAPTION + WS_SYSMENU
 	else if (dialog.hasFlagDS_MODALFRAME() && dialog.hasFlagWS_POPUP() && 
