@@ -37,15 +37,15 @@ padding         	 -> checks all the things below
 										
 	
 Console arguments:
-
-- dialog margins	dm
-- dialog flags		df
-- dialog_dimensions 	dd
-- partial_overlapping 	ol
-- column_alignment 	ca
-- horizontal_alignment  ha
-- standard_dimensions 	sd
-- padding 		pd
+- input file			-f --file [File.rc]
+- dialog margins		-dm
+- dialog flags			-df
+- dialog_dimensions 	-dd
+- partial_overlapping 	-ol
+- column_alignment 		-ca
+- horizontal_alignment  -ha
+- standard_dimensions 	-sd
+- padding 				-pd
 
 
 /////////////////////////////////////////////////////////////////////////////
