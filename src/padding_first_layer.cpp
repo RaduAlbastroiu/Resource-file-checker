@@ -30,6 +30,8 @@ void padding_first_layer::check_padding_first_layer(Accumulator & Accumulate_Iss
 
 	Layer = create_Map(dialogElements);
 
+	Mij_line = create_Map_for_Mij_line(dialogElements);
+
 	for (auto &iter : Layer)
 	{
 		for (int i = 0; i < iter.second.size(); i++)
@@ -87,6 +89,38 @@ map<int, vector<widget>> padding_first_layer::create_Map(const vector<widget> &c
 	return leftColumns;
 }
 
+map<int, vector<widget>> padding_first_layer::create_Map_for_Mij_line(const vector<widget>& controllers)
+{
+
+	map<int, vector<widget>> MijLine;
+
+	// Put each widget in a bucket corresponding to its left column
+	for (const auto &controller : controllers) {
+
+		// Browse buttons, pushbuttons, defpushbuttons and groupboxes are ignored.
+		if (!controller.Is_browse_button() && !controller.Is_transparent()) 
+		{
+			int key = controller.Get_bottom() - ((controller.Get_bottom()-controller.Get_top())/2);
+
+			MijLine[key].push_back(controller);
+		}
+	}
+
+
+	// Iterate through the elements of the map
+	for (auto &line : MijLine) {
+
+		// Sort each of the vectors in the map increasingly based on the top of the contained controllers.
+		sort(line.second.begin(), line.second.end(),
+			[](const widget &w1, const widget &w2) 
+			{
+				return w1.Get_left() < w2.Get_left();
+			});
+	}
+
+	return MijLine;
+}
+
 bool padding_first_layer::should_check(const widget &A, const widget &B)
 {
 	if (A.Is_transparent() || B.Is_transparent())
@@ -109,7 +143,7 @@ bool padding_first_layer::should_check(const widget &A, const widget &B)
 
 bool padding_first_layer::is_on_white_list(const widget & A, const widget & B)
 {
-	int expected = getExpectedVerticalDistance(getKey(B), getKey(B));
+	int expected = getExpectedVerticalDistance(getKey(A), getKey(B));
 	int found = computeVerticalDistance(A, B);
 
 	// if the distance is good
@@ -153,12 +187,8 @@ bool padding_first_layer::is_on_white_list(const widget & A, const widget & B)
 	}
 
 	// returns true if the widgets are aligned each with another editext or drop down list
-	if ((A.Is_checkbox() || A.Is_radio_button() || A.isTextLabel()) &&
-		B.Is_checkbox() || B.Is_radio_button() || B.isTextLabel())
-	{
-		if (horizontally_aligned_widgets(A, B))
-			return true;
-	}
+	if (horizontally_aligned_widgets(A, B))
+		return true;
 
 	return false;
 }
@@ -210,37 +240,73 @@ bool padding_first_layer::on_the_sides(const widget & A, const widget & B, const
 
 bool padding_first_layer::horizontally_aligned_widgets(const widget & A, const widget & B)
 {
-	bool element_a = false;
-	bool element_b = false;
-	
-	for (auto const &iter : dialogElements)
+	int MAX = expected_distance_between_mids(A, B);
+
+	// complexity n^2 it can be reduced but this later on
+	for (auto &line_a : Mij_line[mid_line(A)])
 	{
-		// the controller should be edittext or combobox
-		if (!iter.isEditText() && !iter.Is_drop_list())
+		if (line_a.Get_top() == A.Get_top() &&
+			line_a.Get_bottom() == A.Get_bottom() &&
+			line_a.Get_left() == A.Get_left() &&
+			line_a.Get_right() == A.Get_right())
 			continue;
 
-		if (element_a == false && same_mid_line(iter, A))
-			element_a = true;
+		for (auto &line_b : Mij_line[mid_line(B)])
+		{
+			if (line_b.Get_top() == B.Get_top() &&
+				line_b.Get_bottom() == B.Get_bottom() &&
+				line_b.Get_left() == B.Get_left() &&
+				line_b.Get_right() == B.Get_right())
+				continue;
 
-		if (element_b == false && same_mid_line(iter, B))
-			element_b = true;
+			if (same_vertical(line_a, line_b))
+			{
+				int dist = expected_distance_between_mids(line_a, line_b);
+				if (dist == -1)
+					continue;
+				if (dist > MAX)
+					MAX = dist;
+			}
+		}
 	}
 
-	if (element_a && element_b)
+	if (MAX > expected_distance_between_mids(A, B))
 		return true;
 
 	return false;
 }
 
-bool padding_first_layer::same_mid_line(const widget & OBJ1, const widget & OBJ2)
+int padding_first_layer::expected_distance_between_mids(const widget & A, const widget & B)
 {
-	// extract only usefull data from widget 1 and 2
-	int mid1 = (OBJ1.Get_bottom() - OBJ1.Get_top()) / 2 + OBJ1.Get_top();
-	int mid2 = (OBJ2.Get_bottom() - OBJ2.Get_top()) / 2 + OBJ2.Get_top();
+	int expected = getExpectedVerticalDistance(getKey(A), getKey(B));
+	int dist_a;
+	int dist_b;
 
-	// if good alignment -> return true
-	// if wrong ->  return false
-	if (mid1 == mid2)
+	if (A.Get_bottom() < B.Get_top())
+	{
+		dist_a = A.Get_bottom() - mid_line(A);
+		dist_b = mid_line(B) - B.Get_top();
+		
+		return dist_a + dist_b + expected;
+	}
+	if (B.Get_bottom() < A.Get_top())
+	{
+		dist_a = mid_line(A) - B.Get_top();
+		dist_b = B.Get_bottom() - mid_line(B);
+
+		return dist_a + dist_b + expected;
+	}
+	
+	return -1;
+}
+
+bool padding_first_layer::same_vertical(const widget & A, const widget & B)
+{
+
+	if (B.Get_left() <= A.Get_left() && A.Get_left() <= B.Get_right())
+		return true;
+
+	if (A.Get_left() <= B.Get_left() && B.Get_left() <= A.Get_right())
 		return true;
 
 	return false;

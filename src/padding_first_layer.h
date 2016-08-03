@@ -27,11 +27,14 @@ protected:
 
 	map < int, vector<widget>> Layer;
 
+	map <int, vector<widget>> Mij_line;
+
 	
 	// Have a map where the key is the column and each element of the map is a vector of
 	// widgets left aligned to that column (key).
 	// For each layer a map will be created.
 	map<int, vector<widget>> create_Map(const vector<widget> &controllers);
+	map<int, vector<widget>> create_Map_for_Mij_line(const vector<widget> &controllers);
 
 	bool should_check(const widget &A, const widget &B);
 
@@ -49,8 +52,12 @@ protected:
 
 		// returns true if the widgets are aligned each with another editext or drop down list
 		bool horizontally_aligned_widgets(const widget &A, const widget &B);
-			// if thhese controllers have the same mid line
-			bool same_mid_line(const widget &A, const widget &B);
+			// return the expected distance between MID OF CONTROLLERS
+			int expected_distance_between_mids(const widget &A, const widget &B);
+			// if these controllers are on the same columns
+			bool same_vertical(const widget &A, const widget &B);
+			// returns the mid line of the controller
+			int mid_line(const widget &A) { return (A.Get_bottom() - A.Get_top()) / 2 + A.Get_top();}
 
 	// returns true if widgetB is contained in widgetA
 	bool overlapped_controllers(const widget &OBJ1, const widget OBJ2);

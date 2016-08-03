@@ -87,17 +87,17 @@ int padding::getExpVertDistListElems(const widget &first, const widget &second) 
 //The line is the type key of the element above
 //The column is the type key of the element below
 //Value -1 means that the specific distance is unknown and therefore ignored
-int padding::vertical_distances[10][10] = {//0   1   2   3   4   5   6   7   8   9
-	{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },		//0 KEY_IGNORED_CONTROLLER
-	{ -1,  4,  4,  2,  2,  2,  2,  4,  4, -1 },		//1 KEY_PUSHBUTTON
-	{ -1,  4,  4,  2,  2,  2,  2,  4,  4, -1 },		//2 KEY_DEFPUSHBUTTON
-	{ -1,  2,  2,  2,  2,  4,  2,  2,  2,  2 },		//3 KEY_CHECKBOX
-	{ -1,  2,  2,  2,  2,  4,  2,  2,  2,  2 },		//4 KEY_RADIOBUTTON	
-	{ -1,  2,  2,  4,  4,  7,  2,  2,  2,  2 },		//5 KEY_TEXTLABEL
-	{ -1,  2,  2,  2,  2,  2,  4,  2,  7,  5 },		//6 KEY_EDITTEXT
-	{ -1,  4,  4,  2,  2,  2,  2,  7, -1, -1 },		//7 KEY_GROUPBOX
-	{ -1,  4,  4,  2,  2,  2,  7, -1, -1,  7 },		//8 KEY_LISTBOX	
-	{ -1, -1, -1,  2,  2,  2,  5, -1,  7,  6 },		//9 KEY_DROPDOWNLIST
+int padding::vertical_distances[10][10] =   {//0   1   2   3   4   5   6   7   8   9
+											{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },		//0 KEY_IGNORED_CONTROLLER
+											{ -1,  4,  4,  2,  2,  2,  2,  4,  4, -1 },		//1 KEY_PUSHBUTTON
+											{ -1,  4,  4,  2,  2,  2,  2,  4,  4, -1 },		//2 KEY_DEFPUSHBUTTON
+											{ -1,  2,  2,  2,  2,  4,  2,  2,  2,  2 },		//3 KEY_CHECKBOX
+											{ -1,  2,  2,  2,  2,  4,  2,  2,  2,  2 },		//4 KEY_RADIOBUTTON	
+											{ -1,  2,  2,  4,  4,  7,  2,  2,  2,  2 },		//5 KEY_TEXTLABEL
+											{ -1,  2,  2,  2,  2,  2,  4,  2,  7,  5 },		//6 KEY_EDITTEXT
+											{ -1,  4,  4,  2,  2,  2,  2,  7, -1, -1 },		//7 KEY_GROUPBOX
+											{ -1,  4,  4,  2,  2,  2,  7, -1, -1,  7 },		//8 KEY_LISTBOX	
+											{ -1, -1, -1,  2,  2,  2,  5, -1,  7,  6 },		//9 KEY_DROPDOWNLIST
 };
 //============================================
 
