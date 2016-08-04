@@ -132,8 +132,8 @@ bool padding_first_layer::should_check(const widget &A, const widget &B)
 	if (A.isDefPushButton() || A.isPushButton() || B.isPushButton() || B.isDefPushButton())
 		return false;
 
-	//if (A.Get_deep() > 1 || B.Get_deep() > 1)
-		//return false;
+	if (A.Get_deep() > 1 || B.Get_deep() > 1)
+		return false;
 
 	if(A.Get_father_pointer() != B.Get_father_pointer())
 		return false;
@@ -254,6 +254,7 @@ bool padding_first_layer::on_the_sides(const widget & A, const widget & B, const
 bool padding_first_layer::horizontally_aligned_widgets(const widget & A, const widget & B)
 {
 	int MAX = expected_distance_between_mids(A, B);
+	bool dist_was_modified = false;
 
 	// complexity n^2 it can be reduced but this later on
 	for (auto &line_a : Mij_line[mid_line(A)])
@@ -275,13 +276,23 @@ bool padding_first_layer::horizontally_aligned_widgets(const widget & A, const w
 			if (same_vertical(line_a, line_b))
 			{
 				int dist = expected_distance_between_mids(line_a, line_b);
+
 				if (dist == -1)
 					continue;
+
 				if (dist > MAX)
 					MAX = dist;
+				
+				if (dist == MAX)
+					dist_was_modified = true;
 			}
 		}
 	}
+
+	if (MAX == expected_distance_between_mids(A, B) && 
+		A.isTextLabel() && B.isTextLabel() &&
+		dist_was_modified)
+		return true;
 
 	if (MAX > expected_distance_between_mids(A, B))
 		return true;
