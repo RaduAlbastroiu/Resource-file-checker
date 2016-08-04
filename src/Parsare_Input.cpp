@@ -412,6 +412,7 @@ widget Parsare::Parsare_line(wstring &Line)
 	Parsare::Parsare_radio_button(Line, OBJ);
 	Parsare::Parsare_transparent(Line, OBJ);
 	Parsare::Parsare_check_box(Line, OBJ);
+	Parsare::Parsare_spin_button(Line, OBJ);
 	Parsare::Parsare_name(Line, OBJ);
 	Parsare::Parsare_ID(Line, OBJ);
 	Parsare::Parsare_Set_position(Line, OBJ);
@@ -480,6 +481,15 @@ void Parsare::Parsare_check_box(wstring &Line, widget &OBJ)
 	val = Line.find(L"BS_AUTOCHECKBOX") != wstring::npos;
 
 	OBJ.Set_checkbox(val);
+}
+
+void Parsare::Parsare_spin_button(wstring &Line, widget &OBJ) {
+
+	bool spin = Line.find(L"UDS_ARROWKEYS") != wstring::npos;
+
+	if (spin) {
+		OBJ.setSpinButton();
+	}
 }
 
 void Parsare::drop_list_check(const wstring &line, widget &control)

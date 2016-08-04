@@ -64,6 +64,7 @@ class Parsare
 				void Parsare_radio_button(wstring &Line, widget &OBJ);
 				void Parsare_transparent(wstring &Line, widget &OBJ);
 				void Parsare_check_box(wstring &Line, widget &OBJ);
+				void Parsare_spin_button(wstring &line, widget &OBJ);
 				void Parsare_name(wstring &Line, widget &OBJ);
 				void Parsare_ID(wstring &Line, widget &OBJ);
 				void Parsare_Set_position(wstring &Line, widget &OBJ);

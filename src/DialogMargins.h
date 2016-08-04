@@ -24,6 +24,9 @@
 #define VSCROLL_SIZE 11
 #define HSCROLL_SIZE 10
 
+// a margin being greater or equal to 60 will be ignored
+#define IGNORED_MARGIN 60
+
 class DialogMargins : public Valid {
 	public :
 		DialogMargins(const Dialog_box &currentDialog, const vector<widget> &dialogWidgets);
@@ -60,6 +63,9 @@ class DialogMargins : public Valid {
 		// checks the margins for each type of dialog
 		void checkMarginsForFrame(const int &left, const int &right, const int &top, const int &bottom);
 		void checkMarginsForModal(const int &left, const int &right, const int &top, const int &bottom);
+
+		// returns true if the dialog doesn't have any margin ok
+		bool noMarginsMatch();
 
 		// returns true if the number of margins of the dialog that respect the frame margins
 		// is larger or equal than the ones that respect the modal margins

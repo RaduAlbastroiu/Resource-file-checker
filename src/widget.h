@@ -127,6 +127,11 @@ class widget
 		//retuns true if the controller's type is listbox
 		bool isListBox() const { return type == L"LISBOX"; }
 
+		//set a widget as spin button
+		void setSpinButton() { spinButton = true; }
+		//checks if a widget is a spin button
+		bool isSpinButton() const { return spinButton; }
+
 
 
 	private:
@@ -142,12 +147,15 @@ class widget
 		vector<widget*> child;
 
 		margins Position;
+
 		bool Tab_validation = false;
-		bool Ws_group = false;
-		bool Radio_button = false;
-		bool drop_list = false;
-		bool checkbox = false;
-		bool transparent = false;
+		bool Ws_group		= false;
+		bool Radio_button	= false;
+		bool drop_list		= false;
+		bool checkbox		= false;
+		bool transparent	= false;
+		bool spinButton		= false;
+
 		int Radio_button_group = 0;
 		int width;
 		int height;
