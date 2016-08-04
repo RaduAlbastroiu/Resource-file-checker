@@ -26,6 +26,7 @@
 #define KEY_GROUPBOX 7
 #define KEY_LISTBOX 8
 #define KEY_DROPDOWNLIST 9
+#define KEY_CONTROL 3 // same as a checkbox
 
 //distances for the start and end of a list by controllers
 #define NEW_LIST_TEXTLABEL 0

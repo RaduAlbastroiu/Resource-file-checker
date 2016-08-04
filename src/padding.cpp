@@ -48,6 +48,7 @@ int padding::getKey(const widget &element) {
 									element.Is_groupbox() ? KEY_GROUPBOX :
 										element.isListBox() ? KEY_LISTBOX :
 											element.Is_drop_list() ? KEY_DROPDOWNLIST :
+												element.isControl() ? KEY_CONTROL :
 																		KEY_IGNORED_CONTROLLER;
 }
 

@@ -12,6 +12,8 @@
 //Standard dimension checker
 void standard_dimensions::check_dimensions(Accumulator &Accumulate_Issues, const vector<widget> &Dialog_controllers)
 {
+	initialize_vect_of_widgets(Dialog_controllers);
+
 	initializeDimension();
 	int valid;
 	for (const widget &controller : Dialog_controllers)
@@ -88,6 +90,12 @@ int standard_dimensions::check_dimensions_special_case(const widget & controller
 
 	// compute correct height for bigger editext
 	correct_height = Check_for_bigger_editext(controller);
+	
+	if (correct_height)
+		return correct_height;
+
+	// compute correct height for special case with checkbox and groupbox under it
+	correct_height = Check_for_custom_check_box_before_groupbox(controller);
 	
 	if (correct_height)
 		return correct_height;
@@ -195,6 +203,31 @@ int standard_dimensions::Check_for_bigger_editext(const widget & controller)
 }
 
 
+
+bool standard_dimensions::Check_for_custom_check_box_before_groupbox(const widget & controller)
+{
+	// height of the current widget
+	int height = controller.Get_bottom() - controller.Get_top();
+
+	if (controller.Is_checkbox())
+	{
+		if (height > special_case_check_box_min && height < special_case_check_box_max)
+		{
+			for (auto &iter : Dialog_controllers)
+			{
+				if (iter.Is_groupbox())
+				{
+					if (controller.Get_bottom() <= iter.Get_top() &&
+						iter.Get_top() - controller.Get_bottom() < special_case_check_box_verification_distance)
+						return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+
 //it initialize dimensions for standard dimensions 
 void standard_dimensions::initializeDimension()
 {
@@ -205,6 +238,14 @@ void standard_dimensions::initializeDimension()
 	standard_dimension_map[L"DEFPUSHBUTTON"].height = standard_dimension_for_DEFPUSHBUTTON;
 	standard_dimension_map[L"DEFPUSHBUTTON"].width = 50;
 
+}
+
+void standard_dimensions::initialize_vect_of_widgets(const vector<widget>& controllers)
+{
+	for (auto &iter : controllers)
+	
+		Dialog_controllers.push_back(iter);
+	
 }
 
 //if height is appropriate for the widget type
@@ -222,7 +263,11 @@ bool standard_dimensions::white_list(const widget & controller)
 {
 	if (controller.Is_browse_button())
 		return true;
+
 	if (controller.isTextLabel() && controller.Get_name() == L"Static" && (controller.Get_bottom() - controller.Get_top()) > 15)
+		return true;
+	
+	if (Check_for_custom_check_box_before_groupbox(controller))
 		return true;
 
 	return false;

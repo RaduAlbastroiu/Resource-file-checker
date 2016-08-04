@@ -127,6 +127,9 @@ class widget
 		//retuns true if the controller's type is listbox
 		bool isListBox() const { return type == L"LISBOX"; }
 
+		// returns true if the controller is type control
+		bool isControl() const { return type == L"CONTROL"; }
+
 		//set a widget as spin button
 		void setSpinButton() { spinButton = true; }
 		//checks if a widget is a spin button
