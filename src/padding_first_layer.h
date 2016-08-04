@@ -8,6 +8,7 @@
 #include "padding.h"
 
 #define MAX_COMPARISON_DISTANCE 50
+#define Controllers_bigger_than_this_can_be_an_exception 19 
 
 class padding_first_layer : public padding
 {

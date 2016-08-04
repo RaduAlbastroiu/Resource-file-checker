@@ -129,6 +129,9 @@ bool padding_first_layer::should_check(const widget &A, const widget &B)
 	if (A.Is_browse_button() || B.Is_browse_button())
 		return false;
 
+	if (A.isDefPushButton() || A.isPushButton() || B.isPushButton() || B.isDefPushButton())
+		return false;
+
 	//if (A.Get_deep() > 1 || B.Get_deep() > 1)
 		//return false;
 
@@ -176,9 +179,11 @@ bool padding_first_layer::is_on_white_list(const widget & A, const widget & B)
 		if (in_between_vertically(A, B, iter))
 			return true;
 		
-		if (iter.Get_type() == L"CONTROL" &&
+		if ((iter.Get_type() == L"CONTROL" &&
 			(A.isPushButton() || A.isDefPushButton()) &&
-			(B.isPushButton() || B.isDefPushButton()))
+			(B.isPushButton() || B.isDefPushButton())) ||
+			(( iter.Get_bottom()-iter.Get_top() > Controllers_bigger_than_this_can_be_an_exception) &&
+			   iter.isTextLabel()))
 		{
 			if (on_the_sides(A, B, iter))
 				return true;
@@ -233,6 +238,14 @@ bool padding_first_layer::on_the_sides(const widget & A, const widget & B, const
 	
 	if (C.Get_top() <= min_top &&
 		C.Get_bottom() >= max_bot)
+		return true;
+
+	if (C.Get_top() == A.Get_top() && C.Get_bottom() > A.Get_bottom() &&
+		!overlapped_controllers(C, A))
+		return true;
+
+	if (C.Get_top() == B.Get_top() && C.Get_bottom() > B.Get_bottom() &&
+		!overlapped_controllers(C, B))
 		return true;
 
 	return false;
