@@ -480,6 +480,9 @@ void Parsare::Parsare_check_box(wstring &Line, widget &OBJ)
 
 	val = Line.find(L"BS_AUTOCHECKBOX") != wstring::npos;
 
+	if (val == false)
+		val = Line.find(L"BS_AUTO3STATE") != wstring::npos;
+
 	OBJ.Set_checkbox(val);
 }
 
