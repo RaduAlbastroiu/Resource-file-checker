@@ -151,6 +151,14 @@ void padding_for_min_distance::validatePairVertically(const widget &first, const
 		return;
 	}
 
+	// Skip Textlabesl without text
+	if ((first.isTextLabel() && !first.Has_name()) || (second.isTextLabel() && !second.Has_name()))
+		return;
+
+	// Skip Textlabesl without text
+	if ( first.Is_transparent() || second.Is_transparent())
+		return;
+
 	if (expectedDistance > actualDistance) {
 
 		nrissues_padding_vertically++;

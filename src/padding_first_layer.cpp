@@ -43,7 +43,7 @@ void padding_first_layer::check_padding_first_layer(Accumulator & Accumulate_Iss
 					int expected = getExpectedVerticalDistance(getKey(iter.second[i]), getKey(iter.second[j]));
 					int real = computeVerticalDistance(iter.second[i], iter.second[j]);
 
-					if (expected > 0 &&
+					if (expected > 0 && real > expected &&
 					   (!is_on_white_list(iter.second[i], iter.second[j])))
 					{
 						nrissues_padding_vertically++;
