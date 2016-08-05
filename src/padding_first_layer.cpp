@@ -44,8 +44,7 @@ void padding_first_layer::check_padding_first_layer(Accumulator & Accumulate_Iss
 					int real = computeVerticalDistance(iter.second[i], iter.second[j]);
 
 					if (expected > 0 &&
-					   (!is_on_white_list(iter.second[i], iter.second[j])) &&
-						same_type(iter.second[i], iter.second[j]))
+					   (!is_on_white_list(iter.second[i], iter.second[j])))
 					{
 						nrissues_padding_vertically++;
 
@@ -129,10 +128,16 @@ bool padding_first_layer::should_check(const widget &A, const widget &B)
 	if (A.Is_browse_button() || B.Is_browse_button())
 		return false;
 
+	// Ignore pushbuttons (too many fixes)
 	if (A.isDefPushButton() || A.isPushButton() || B.isPushButton() || B.isDefPushButton())
 		return false;
 
+	// This set the max layer for padding
 	if (A.Get_deep() > 1 || B.Get_deep() > 1)
+		return false;
+
+	// This will enable issues between other types of widgets
+	if (!same_type(A, B))
 		return false;
 
 	if(A.Get_father_pointer() != B.Get_father_pointer())
