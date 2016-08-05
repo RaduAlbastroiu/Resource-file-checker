@@ -158,10 +158,20 @@ bool padding_first_layer::is_on_white_list(const widget & A, const widget & B)
 	if (expected == found)
 		return true;
 
+	if ((expected < found && found - expected> MAX_MODIFY_DISTANCE) &&
+		(!A.Is_groupbox() && !B.Is_groupbox()) && (!A.isControl() && !B.isControl()))
+		return true;
+
+	// For Checkbox distance is between 2 and 5
 	if ((A.Is_checkbox() || A.Is_radio_button()) &&
 		B.Is_checkbox() || B.Is_radio_button())
 		if ((found >= expected) && (found <= expected + 3))
 			return true;
+
+	// [LCR]TEXT without text is ignored
+	if ((A.isTextLabel() && !A.Has_name()) ||
+		B.isTextLabel() && !B.Has_name())
+		return true;
 
 	// if the distance is too big
 	if (found > MAX_COMPARISON_DISTANCE)

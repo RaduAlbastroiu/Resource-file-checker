@@ -7,7 +7,10 @@
 #include "Accumulator.h"
 #include "padding.h"
 
-#define MAX_COMPARISON_DISTANCE 50
+// This distance should be modified to increase the range of issues
+#define MAX_COMPARISON_DISTANCE 20
+#define MAX_MODIFY_DISTANCE 7
+
 #define Controllers_bigger_than_this_can_be_an_exception 19 
 
 class padding_first_layer : public padding
