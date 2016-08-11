@@ -101,8 +101,8 @@ void Valid::Get_issues(Dialog_box Dialog, Accumulator &Accumulate_Issues)
 	//Sort the list of controllers
 	if (should_be_run(L"-zo")) {
 		//CURRENTLY DISABLED
-		/*sorting sort;
-		sort.check_sorting(Accumulate_Issues, Dialog_controllers);*/
+		sorting sort;
+		sort.check_sorting(Accumulate_Issues, Dialog_controllers);
 	}
 }
 

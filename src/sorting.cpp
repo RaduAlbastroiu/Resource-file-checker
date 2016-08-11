@@ -11,42 +11,20 @@
 //sorting issue class checker
 void sorting::check_sorting(Accumulator &Accumulate_Issues, vector<widget> &Dialog_controllers)
 {
-	this->valid = true;
-	int i, j;
-	auto n = Dialog_controllers.size();
-	vector<widget> Dialog_controllers_sort;
+	// copy the elements
+	vector<widget> Dialog_controllers_sorted = Dialog_controllers;
 
-	for (i = 1; i < n; i++)
+	// sort them according to Z-order rules
+	sort(Dialog_controllers_sorted.begin(), Dialog_controllers_sorted.end(), comp);
+
+	// check for differences between the order from file and the computed order
+	if (!equal(Dialog_controllers.begin(), Dialog_controllers.end(), Dialog_controllers_sorted.begin(), Dialog_controllers_sorted.end()))
 	{
-		if (comp(Dialog_controllers[i - 1], Dialog_controllers[i]) == false)
-		{
-			this->valid = false;
+		//increase the nr of issues for this type
+		nrissues_sort++;
 
-			for (j = 0; j < n; j++)
-			{
-				Dialog_controllers_sort.push_back(Dialog_controllers[j]);
-			}
-			//sorting
-			std::sort(Dialog_controllers_sort.begin(), Dialog_controllers_sort.end(), comp);
-
-			this->repair_sort(Dialog_controllers_sort);
-
-			for (j = 0; j < Dialog_controllers.size(); j++)
-			{
-				if (Dialog_controllers[j] != Dialog_controllers_sort[j])
-				{
-					//increase the nr of issues for this type
-					nrissues_sort++;
-
-					//create obj
-					unique_ptr < Issue > pointer = make_unique < sorting_issue >(Dialog_controllers_sort);
-
-					Accumulate_Issues.push_issue(move(pointer));
-
-					return;
-				}
-			}
-		}
+		unique_ptr < Issue > pointer = make_unique < sorting_issue >(Dialog_controllers_sorted);
+		Accumulate_Issues.push_issue(move(pointer));
 	}
 }
 void sorting::repair_sort(vector<widget> &controllers)

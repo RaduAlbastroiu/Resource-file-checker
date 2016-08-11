@@ -8,7 +8,7 @@ bool widget::operator==(const widget A)
 {
 return	Position.top == A.Position.top &&
 		Position.bottom == A.Position.bottom &&
-		Position.left == A.Position.right &&
+		Position.left == A.Position.left &&
 		Position.right == A.Position.right &&
 
 		father == A.father &&
