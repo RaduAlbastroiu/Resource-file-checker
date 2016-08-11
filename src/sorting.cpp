@@ -51,22 +51,22 @@ void sorting::repair_sort(vector<widget> &controllers)
 	}
 }
 /*static*/
-bool sorting::comp(const widget &OBJ1, const widget &OBJ2)
+bool sorting::comp(const widget &first, const widget &second)
 {
 	int top1, top2;
 	int bot1, bot2;
 	int left1, left2;
 	int right1, right2;
 
-	top1 = OBJ1.Get_top();
-	bot1 = OBJ1.Get_bottom();
-	left1 = OBJ1.Get_left();
-	right1 = OBJ1.Get_right();
+	top1 = first.Get_top();
+	bot1 = first.Get_bottom();
+	left1 = first.Get_left();
+	right1 = first.Get_right();
 
-	top2 = OBJ2.Get_top();
-	bot2 = OBJ2.Get_bottom();
-	left2 = OBJ2.Get_left();
-	right2 = OBJ2.Get_right();
+	top2 = second.Get_top();
+	bot2 = second.Get_bottom();
+	left2 = second.Get_left();
+	right2 = second.Get_right();
 
 	//Total Overlapping
 	if (top2 < top1 && bot2 > bot1 && left2 < left1 && right2 > right1)
@@ -77,26 +77,26 @@ bool sorting::comp(const widget &OBJ1, const widget &OBJ2)
 	//================
 
 	//Same row
-	if ((OBJ1.Get_top() < ((OBJ2.Get_top() + OBJ2.Get_bottom()) / 2) && ((OBJ2.Get_top() + OBJ2.Get_bottom()) / 2) < OBJ1.Get_bottom()) || (OBJ2.Get_top() < ((OBJ1.Get_top() + OBJ1.Get_bottom()) / 2) && ((OBJ1.Get_top() + OBJ1.Get_bottom()) / 2) < OBJ2.Get_bottom()))
+	if ((first.Get_top() < ((second.Get_top() + second.Get_bottom()) / 2) && ((second.Get_top() + second.Get_bottom()) / 2) < first.Get_bottom()) || (second.Get_top() < ((first.Get_top() + first.Get_bottom()) / 2) && ((first.Get_top() + first.Get_bottom()) / 2) < second.Get_bottom()))
 	{
-		bool x = (OBJ1.Get_top() < ((OBJ2.Get_top() + OBJ2.Get_bottom()) / 2) && ((OBJ2.Get_top() + OBJ2.Get_bottom()) / 2) < OBJ1.Get_bottom());
+		bool x = (first.Get_top() < ((second.Get_top() + second.Get_bottom()) / 2) && ((second.Get_top() + second.Get_bottom()) / 2) < first.Get_bottom());
 
-		bool y = (OBJ2.Get_top() < ((OBJ1.Get_top() + OBJ1.Get_bottom()) / 2) && ((OBJ1.Get_top() + OBJ1.Get_bottom()) / 2) < OBJ2.Get_bottom());
+		bool y = (second.Get_top() < ((first.Get_top() + first.Get_bottom()) / 2) && ((first.Get_top() + first.Get_bottom()) / 2) < second.Get_bottom());
 
-		if (OBJ1.Get_right() < OBJ2.Get_left())
+		if (first.Get_right() < second.Get_left())
 			return true;
-		if (OBJ2.Get_right() < OBJ1.Get_left())
+		if (second.Get_right() < first.Get_left())
 			return false;
 	}
 	//========
 
 	// Overlap on oY
-	if (!(OBJ1.Get_top() > OBJ2.Get_bottom() || OBJ2.Get_top() > OBJ1.Get_bottom())) {
-		return OBJ1.Get_top() < OBJ2.Get_top();
+	if (!(first.Get_top() > second.Get_bottom() || second.Get_top() > first.Get_bottom())) {
+		return first.Get_top() < second.Get_top();
 	}
 	//Different rows
 	else {
-		if (OBJ1.Get_bottom() < OBJ2.Get_top())
+		if (first.Get_bottom() < second.Get_top())
 			return true;
 		else
 			return false;
