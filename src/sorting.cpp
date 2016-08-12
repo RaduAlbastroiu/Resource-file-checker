@@ -53,40 +53,21 @@ void sorting::repair_sort(vector<widget> &controllers)
 /*static*/
 bool sorting::comp(const widget &first, const widget &second)
 {
-	int top1, top2;
-	int bot1, bot2;
-	int left1, left2;
-	int right1, right2;
 
-	top1 = first.Get_top();
-	bot1 = first.Get_bottom();
-	left1 = first.Get_left();
-	right1 = first.Get_right();
 
-	top2 = second.Get_top();
-	bot2 = second.Get_bottom();
-	left2 = second.Get_left();
-	right2 = second.Get_right();
 
 	//Total Overlapping
-	if (top2 < top1 && bot2 > bot1 && left2 < left1 && right2 > right1)
+	if (top2 <= top1 && bot2 >= bot1 && left2 <= left1 && right2 >= right1)
 		return false;
 
-	if (top1 < top2 && bot1 > bot2 && left1 < left2 && right1 > right2)
+	if (top1 <= top2 && bot1 >= bot2 && left1 <= left2 && right1 >= right2)
 		return true;
 	//================
 
 	//Same row
-	if ((first.Get_top() < ((second.Get_top() + second.Get_bottom()) / 2) && ((second.Get_top() + second.Get_bottom()) / 2) < first.Get_bottom()) || (second.Get_top() < ((first.Get_top() + first.Get_bottom()) / 2) && ((first.Get_top() + first.Get_bottom()) / 2) < second.Get_bottom()))
+	if ((first.Get_top() <= ((second.Get_top() + second.Get_bottom()) / 2) && ((second.Get_top() + second.Get_bottom()) / 2) <= first.Get_bottom()) || (second.Get_top() <= ((first.Get_top() + first.Get_bottom()) / 2) && ((first.Get_top() + first.Get_bottom()) / 2) <= second.Get_bottom()))
 	{
-		bool x = (first.Get_top() < ((second.Get_top() + second.Get_bottom()) / 2) && ((second.Get_top() + second.Get_bottom()) / 2) < first.Get_bottom());
-
-		bool y = (second.Get_top() < ((first.Get_top() + first.Get_bottom()) / 2) && ((first.Get_top() + first.Get_bottom()) / 2) < second.Get_bottom());
-
-		if (first.Get_right() < second.Get_left())
-			return true;
-		if (second.Get_right() < first.Get_left())
-			return false;
+		return first.Get_left() < second.Get_left();
 	}
 	//========
 
