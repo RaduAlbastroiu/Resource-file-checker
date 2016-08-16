@@ -46,6 +46,11 @@ void padding_first_layer::check_padding_first_layer(Accumulator & Accumulate_Iss
 					if (expected > 0 && real > expected &&
 					   (!is_on_white_list(iter.second[i], iter.second[j])))
 					{
+						// decrese the output distance inbetween two controllers
+						if ((iter.second[i].Is_checkbox() || iter.second[i].Is_radio_button()) 
+							&&( iter.second[j].Is_checkbox() || iter.second[j].Is_radio_button()))
+							expected -= 2;
+
 						nrissues_padding_vertically++;
 
 						unique_ptr<Issue> pointer = make_unique< padding_issue_vertically >(iter.second[i], iter.second[j], expected - real);
