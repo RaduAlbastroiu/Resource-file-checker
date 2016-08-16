@@ -25,9 +25,11 @@ void standard_dimensions::check_dimensions(Accumulator &Accumulate_Issues, const
 			valid = check_dimensions_special_case(controller);
 			// if it is a special case
 
+			// vertical size of the widget
 			int current_size = controller.Get_bottom() - controller.Get_top();
 			
-			if (valid && valid > current_size)
+			// if the recomanded vertical size is bigger than the current vertical size
+			if (valid > current_size)
 			{
 				//increase the nr of issues for this type
 				nrissues_standard_dimensions++;
@@ -47,9 +49,11 @@ void standard_dimensions::check_dimensions(Accumulator &Accumulate_Issues, const
 					// valid becomes the correct height or 0 if the controller has the correct height
 					valid = is_Valid_Height(controller, standard_dimension_map[controller.Get_type()].height);
 
+					// vertical size of the widget
 					int current_size = controller.Get_bottom() - controller.Get_top();
 
-					if (valid && valid > current_size)
+					// if the recomanded vertical size is bigger than the current vertical size
+					if (valid > current_size)
 					{
 						//increase the nr of issues for this type
 						nrissues_standard_dimensions++;
@@ -265,6 +269,11 @@ int standard_dimensions::is_Valid_Height(const widget &w, int height)
 // white list contains cases that are not tested
 bool standard_dimensions::white_list(const widget & controller)
 {
+
+	// ignore [LRC]Text without text 
+	if (controller.isTextLabel() && !controller.Has_name())
+		return true;
+
 	if (controller.Is_browse_button())
 		return true;
 
