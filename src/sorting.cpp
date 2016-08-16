@@ -53,34 +53,23 @@ void sorting::repair_sort(vector<widget> &controllers)
 /*static*/
 bool sorting::comp(const widget &first, const widget &second)
 {
+	int middle1 = (first.Get_top()  + first.Get_bottom())  / 2;
+	int middle2 = (second.Get_top() + second.Get_bottom()) / 2;
 
-
-
-	//Total Overlapping
-	if (top2 <= top1 && bot2 >= bot1 && left2 <= left1 && right2 >= right1)
+	// If an object contains another then that object should be put before the other one 
+	if (second.contains(first))
 		return false;
 
-	if (top1 <= top2 && bot1 >= bot2 && left1 <= left2 && right1 >= right2)
+	if (first.contains(second))
 		return true;
-	//================
 
-	//Same row
-	if ((first.Get_top() <= ((second.Get_top() + second.Get_bottom()) / 2) && ((second.Get_top() + second.Get_bottom()) / 2) <= first.Get_bottom()) || (second.Get_top() <= ((first.Get_top() + first.Get_bottom()) / 2) && ((first.Get_top() + first.Get_bottom()) / 2) <= second.Get_bottom()))
+	// Order them from left to right if the middle of an object intersects the middle of the other one
+	if ((first.Get_top()  <= middle2 && middle2 <= first.Get_bottom()) || 
+		(second.Get_top() <= middle1 && middle1 <= second.Get_bottom()))
 	{
 		return first.Get_left() < second.Get_left();
 	}
-	//========
 
-	// Overlap on oY
-	if (!(first.Get_top() > second.Get_bottom() || second.Get_top() > first.Get_bottom())) {
-		return first.Get_top() < second.Get_top();
-	}
-	//Different rows
-	else {
-		if (first.Get_bottom() < second.Get_top())
-			return true;
-		else
-			return false;
-	}
-	//==============	
+	// Otherwise order them by top
+	return first.Get_top() < second.Get_top();
 }

@@ -140,3 +140,9 @@ bool widget::contains_mid_of(const widget &obj) const
 			mid_y <= Position.bottom && mid_y >= Position.top);
 }
 
+bool widget::contains(const widget &wid) const{
+	return	Get_top()	 <= wid.Get_top()    &&
+			Get_bottom() >= wid.Get_bottom() &&
+			Get_left()	 <= wid.Get_left()   &&
+			Get_right()  >= wid.Get_right();
+}

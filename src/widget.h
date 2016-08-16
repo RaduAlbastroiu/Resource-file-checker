@@ -112,6 +112,9 @@ class widget
 		//return true if containts the mid of obj
 		bool contains_mid_of(const widget &obj) const;
 
+		// returns true if *this completely overlaps the wid widget
+		bool contains(const widget &wid) const;
+
 		//returns true if the controller's type ia pushbutton
 		bool isPushButton() const { return type == L"PUSHBUTTON"; }
 
