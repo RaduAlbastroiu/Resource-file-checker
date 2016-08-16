@@ -181,7 +181,7 @@ void Valid::create_control_list(vector<widget>::iterator it, vector<widget> &Dia
 
 	for (; it != Dialog_controllers.end(); it++)
 	{
-		if (it->Get_Ws_group() || it->Get_type() != L"CONTROL" || 
+		if (it->Has_Ws_group() || it->Get_type() != L"CONTROL" || 
 			((control.check_box && it->Is_radio_button()) || 
 				control.radio_button && it->Is_checkbox()))
 			break;

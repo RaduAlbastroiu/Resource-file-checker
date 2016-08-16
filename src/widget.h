@@ -11,8 +11,8 @@ class widget
 {
 	public:
 		//Operator overloading
-		bool operator==(const widget A);
-		bool operator!=(const widget A);
+		bool operator==(const widget A) const;
+		bool operator!=(const widget A) const;
 
 		//constructor
 		widget();
@@ -84,7 +84,7 @@ class widget
 		void Change_group(bool x) { this->Ws_group = x; }
 
 		// return the group validation
-		bool Get_Ws_group()const { return Ws_group; }
+		bool Has_Ws_group()const { return Ws_group; }
 
 		// Change radiobutton t/f
 		void Set_radio_button(bool x) { this->Radio_button = x; }

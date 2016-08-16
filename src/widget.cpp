@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "widget.h"
 
-bool widget::operator==(const widget A)
+bool widget::operator==(const widget A) const
 {
 return	Position.top == A.Position.top &&
 		Position.bottom == A.Position.bottom &&
@@ -16,7 +16,7 @@ return	Position.top == A.Position.top &&
 		type == A.type;
 }
 
-bool widget::operator!=(const widget A)
+bool widget::operator!=(const widget A) const
 {
 	return !(*this == A);
 }
