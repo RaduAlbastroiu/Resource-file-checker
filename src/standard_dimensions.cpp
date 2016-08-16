@@ -24,8 +24,10 @@ void standard_dimensions::check_dimensions(Accumulator &Accumulate_Issues, const
 			
 			valid = check_dimensions_special_case(controller);
 			// if it is a special case
+
+			int current_size = controller.Get_bottom() - controller.Get_top();
 			
-			if (valid)
+			if (valid && valid > current_size)
 			{
 				//increase the nr of issues for this type
 				nrissues_standard_dimensions++;
@@ -45,7 +47,9 @@ void standard_dimensions::check_dimensions(Accumulator &Accumulate_Issues, const
 					// valid becomes the correct height or 0 if the controller has the correct height
 					valid = is_Valid_Height(controller, standard_dimension_map[controller.Get_type()].height);
 
-					if (valid)
+					int current_size = controller.Get_bottom() - controller.Get_top();
+
+					if (valid && valid > current_size)
 					{
 						//increase the nr of issues for this type
 						nrissues_standard_dimensions++;
