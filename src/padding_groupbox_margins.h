@@ -42,4 +42,6 @@ private:
 	void valid_check_left_groupbox(const widget& father, Accumulator &Accumulate_Issues);
 	void valid_check_right_groupbox(const widget& father, Accumulator &Accumulate_Issues);
 
+	bool is_on_white_list(const widget& controller);
+
 };

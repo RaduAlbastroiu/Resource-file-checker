@@ -34,7 +34,7 @@ void padding_groupbox_margins::check_padding_groupbox_margins(Accumulator &Accum
 	
 	for (auto it : Dialog_controllers)
 	{
-		if (it.Is_groupbox())
+		if (it.Is_groupbox() && !it.Is_transparent())
 		{
 			valid_check_top_groupbox(it, Accumulate_Issues);
 			valid_check_bot_groupbox(it,Accumulate_Issues);
@@ -62,8 +62,11 @@ void padding_groupbox_margins::valid_check_top_groupbox(const widget& father, Ac
 	{
 		if (it->Get_top() < MIN && it->Get_top() >= father.Get_top())
 		{
-			MIN = it->Get_top();
-			child = *it;
+			if (!is_on_white_list(*it))
+			{
+				MIN = it->Get_top();
+				child = *it;
+			}
 		}
 	}
 
@@ -94,8 +97,11 @@ void padding_groupbox_margins::valid_check_bot_groupbox(const widget& father, Ac
 	{
 		if (it->Get_bottom() > MAX && it->Get_bottom() <= father.Get_bottom())
 		{
-			MAX = it->Get_bottom();
-			child = *it;
+			if (!is_on_white_list(*it))
+			{
+				MAX = it->Get_bottom();
+				child = *it;
+			}
 		}
 	}
 
@@ -126,8 +132,11 @@ void padding_groupbox_margins::valid_check_left_groupbox(const widget& father, A
 	{
 		if (it->Get_left() < MIN && it->Get_left() >= father.Get_left())
 		{
-			MIN = it->Get_left();
-			child = *it;
+			if (!is_on_white_list(*it))
+			{
+				MIN = it->Get_left();
+				child = *it;
+			}
 		}
 	}
 
@@ -158,8 +167,11 @@ void padding_groupbox_margins::valid_check_right_groupbox(const widget& father, 
 	{
 		if (it->Get_right() > MAX && it->Get_right() <= father.Get_right())
 		{
-			MAX = it->Get_right();
-			child = *it;
+			if (!is_on_white_list(*it))
+			{
+				MAX = it->Get_right();
+				child = *it;
+			}
 		}
 	}
 
@@ -173,4 +185,21 @@ void padding_groupbox_margins::valid_check_right_groupbox(const widget& father, 
 
 		Accumulate_Issues.push_issue(move(pointer));
 	}
+}
+
+bool padding_groupbox_margins::is_on_white_list(const widget & controller)
+{
+	if (controller.isSpinButton())
+		return true;
+	
+	if (controller.Is_browse_button())
+		return true;
+
+	if (controller.isTextLabel() && !controller.Has_name())
+		return true;
+
+	if (controller.Is_groupbox() && controller.Is_transparent())
+		return true;
+
+	return false;
 }
