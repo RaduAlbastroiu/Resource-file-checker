@@ -11,48 +11,81 @@
 //sorting issue class checker
 void sorting::check_sorting(Accumulator &Accumulate_Issues, vector<widget> &Dialog_controllers)
 {
-	// copy the elements
-	vector<widget> Dialog_controllers_sorted = Dialog_controllers;
+	auto unorderedBuckets = getGroupedWidgets(Dialog_controllers);
 
-	// sort them according to Z-order rules
-	sort(Dialog_controllers_sorted.begin(), Dialog_controllers_sorted.end(), comp);
+	// create and sort a copy of the elements
+	auto sortedBuckets  = unorderedBuckets;
+	sort(sortedBuckets.begin(), sortedBuckets.end(), comp);
 
-	// check for differences between the order from file and the computed order
-	if (!equal(Dialog_controllers.begin(), Dialog_controllers.end(), Dialog_controllers_sorted.begin(), Dialog_controllers_sorted.end()))
+	// checking if there is the same order
+	bool isSameOrder = equal(unorderedBuckets.begin(), unorderedBuckets.end(), sortedBuckets.begin(), sortedBuckets.end(),
+		[](const bucket& first, const bucket& second) {
+			return first.front() == second.front();
+	});
+
+	// if there is not the same order then report an issue with the suggested order
+	if (!isSameOrder) 
 	{
-		//increase the nr of issues for this type
 		nrissues_sort++;
 
-		unique_ptr < Issue > pointer = make_unique < sorting_issue >(Dialog_controllers_sorted);
-		Accumulate_Issues.push_issue(move(pointer));
+		auto ptr = make_unique<sorting_issue>(getElementsFromBuckets(sortedBuckets));
+		Accumulate_Issues.push_issue(move(ptr));
 	}
 }
-void sorting::repair_sort(vector<widget> &controllers)
-{
-	auto it = controllers.begin();
-	auto it2 = controllers.begin();
-	bool OK = false;
 
-	for (; it != controllers.end(); it++)
+vector< vector<widget> > sorting::getGroupedWidgets(const vector<widget> &elements) {
+
+	vector < vector<widget> > groupedWidgets;
+
+	using elemIter = vector<widget>::const_iterator;
+
+	elemIter beginCopyRange;
+	elemIter endCopyRange;
+
+	// create widget vectors such that the elements in a vector are part of a group
+	// (a group of controllers is a list of control declarations, the first one having the flag WS_GROUP)
+	for (elemIter iter = elements.begin(); iter != elements.end();) 
 	{
-		if (it->Get_radio_button_group())
+		// find the copy range
+		beginCopyRange = iter;
+		endCopyRange   = iter + 1;
+
+		// the range that needs to be copied for a WS_GROUP control is formed by all the controls declared below it including it
+		if (iter->isControl() && iter->Has_Ws_group()) 
 		{
-			while (OK == false)
-			{
-				OK = true;
-				for (it2 = it + 1; it2 != controllers.end(); it2++)
-				{
-					if ((it2 - 1)->Get_radio_button_group() == 0 &&
-						it2->Get_radio_button_group() == it->Get_radio_button_group())
-						swap(*(it2 - 1), *it);
-				}
-			}
+			endCopyRange = find_if(iter + 1, elements.end(),
+				[](const auto& wid) {
+					return !wid.isControl() || (wid.isControl() && wid.Has_Ws_group());
+				});
 		}
+
+		// create the bucket and put the widget(s) in it
+		groupedWidgets.emplace_back();
+		copy(beginCopyRange, endCopyRange, back_inserter(groupedWidgets.back()));
+
+		iter = endCopyRange;
 	}
+
+	return groupedWidgets;
 }
-/*static*/
-bool sorting::comp(const widget &first, const widget &second)
+
+vector<widget> sorting::getElementsFromBuckets(const vector<bucket>& sortedBuckets) {
+	
+	vector<widget> orderedElements;
+
+	for (const auto& currentBucket : sortedBuckets) {
+		copy(currentBucket.begin(), currentBucket.end(), back_inserter(orderedElements));
+	}
+
+	return orderedElements;
+}
+
+bool sorting::comp(const bucket& firstBucket, const bucket& secondBucket)
 {
+	// Buckets are compared by their front element
+	auto& first = firstBucket.front();
+	auto& second = secondBucket.front();
+
 	int middle1 = (first.Get_top()  + first.Get_bottom())  / 2;
 	int middle2 = (second.Get_top() + second.Get_bottom()) / 2;
 
