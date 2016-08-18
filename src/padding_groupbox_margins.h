@@ -44,4 +44,6 @@ private:
 
 	bool is_on_white_list(const widget& controller);
 
+	void complete_vect_of_kids(vector<widget*> &children);
+
 };

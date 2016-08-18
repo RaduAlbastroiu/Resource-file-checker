@@ -54,6 +54,10 @@ void padding_groupbox_margins::valid_check_top_groupbox(const widget& father, Ac
 	//copy the children pointers vector
 	vector<widget*> children = father.get_pointers_to_children();
 
+	// If there is a transparent groupbox in the father groupbox
+	// all the kids from the transparent groupbox are checked
+	complete_vect_of_kids(children);
+
 	widget child;
 
 	int MIN = Dialog_max_dimension;
@@ -89,6 +93,10 @@ void padding_groupbox_margins::valid_check_bot_groupbox(const widget& father, Ac
 	//copy the children pointers vector
 	vector<widget*> children = father.get_pointers_to_children();
 
+	// If there is a transparent groupbox in the father groupbox
+	// all the kids from the transparent groupbox are checked
+	complete_vect_of_kids(children);
+	
 	widget child;
 
 	int MAX = Dialog_min_dimension;
@@ -124,6 +132,10 @@ void padding_groupbox_margins::valid_check_left_groupbox(const widget& father, A
 	//copy the children pointers vector
 	vector<widget*> children = father.get_pointers_to_children();
 
+	// If there is a transparent groupbox in the father groupbox
+	// all the kids from the transparent groupbox are checked
+	complete_vect_of_kids(children);
+
 	widget child;
 
 	int MIN = Dialog_max_dimension;
@@ -158,6 +170,10 @@ void padding_groupbox_margins::valid_check_right_groupbox(const widget& father, 
 {
 	//copy the children pointers vector
 	vector<widget*> children = father.get_pointers_to_children();
+
+	// If there is a transparent groupbox in the father groupbox
+	// all the kids from the transparent groupbox are checked
+	complete_vect_of_kids(children);
 
 	widget child;
 
@@ -202,4 +218,25 @@ bool padding_groupbox_margins::is_on_white_list(const widget & controller)
 		return true;
 
 	return false;
+}
+
+void padding_groupbox_margins::complete_vect_of_kids(vector<widget*> &children)
+{
+	for (int i = 0; i < children.size(); i++)
+	{
+		if (children[i]->Is_groupbox() && children[i]->Is_transparent())
+		{
+			if (children[i]->get_pointers_to_children().size())
+			{
+				for (auto it_transparent : children[i]->get_pointers_to_children())
+				{
+					if (it_transparent->Get_bottom() <= children[i]->Get_bottom() &&
+						it_transparent->Get_top() >= children[i]->Get_top() &&
+						it_transparent->Get_left() >= children[i]->Get_left() &&
+						it_transparent->Get_right() <= children[i]->Get_right())
+						children.push_back(it_transparent);
+				}
+			}
+		}
+	}
 }
