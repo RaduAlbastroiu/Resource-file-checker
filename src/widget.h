@@ -104,7 +104,7 @@ class widget
 		bool Is_groupbox() const { return type == L"GROUPBOX"; }
 
 		//Is widget transparent
-		bool Is_transparent() const { return type == L"GROUPBOX" && name == L""; }
+		bool Is_transparent() const { return type == L"GROUPBOX" && (name == L"" || name == L"Static" ); }
 
 		//returns true if the controller is a browse button
 		bool Is_browse_button() const;
