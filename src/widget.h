@@ -90,7 +90,7 @@ class widget
 		void Set_radio_button(bool x) { this->Radio_button = x; }
 
 		// Get Radio button t/f
-		bool Is_radio_button() const { return this->Radio_button; }
+		bool Is_radio_button() const { return this->Radio_button || type == L"RADIOBUTTON"; }
 
 		//Change radio button group
 		void Change_radio_button_group(int x) { this->Radio_button_group = x; }

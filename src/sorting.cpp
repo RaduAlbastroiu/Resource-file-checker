@@ -13,9 +13,8 @@ void sorting::check_sorting(Accumulator &Accumulate_Issues, vector<widget> &Dial
 {
 	auto unorderedBuckets = getGroupedWidgets(Dialog_controllers);
 
-	// create and sort a copy of the elements
-	auto sortedBuckets  = unorderedBuckets;
-	sort(sortedBuckets.begin(), sortedBuckets.end(), comp);
+	// create a Z-ordered copy of the elements
+	auto sortedBuckets = getOrderedBuckets(unorderedBuckets);
 
 	// checking if there is the same order
 	bool isSameOrder = equal(unorderedBuckets.begin(), unorderedBuckets.end(), sortedBuckets.begin(), sortedBuckets.end(),
@@ -33,9 +32,9 @@ void sorting::check_sorting(Accumulator &Accumulate_Issues, vector<widget> &Dial
 	}
 }
 
-vector< vector<widget> > sorting::getGroupedWidgets(const vector<widget> &elements) {
+vector<sorting::bucket> sorting::getGroupedWidgets(const vector<widget>& elements) {
 
-	vector < vector<widget> > groupedWidgets;
+	vector < bucket > groupedWidgets;
 
 	using elemIter = vector<widget>::const_iterator;
 
@@ -54,8 +53,13 @@ vector< vector<widget> > sorting::getGroupedWidgets(const vector<widget> &elemen
 		if (iter->isControl() && iter->Has_Ws_group()) 
 		{
 			endCopyRange = find_if(iter + 1, elements.end(),
-				[](const auto& wid) {
-					return !wid.isControl() || (wid.isControl() && wid.Has_Ws_group());
+				[&](const auto& wid) {
+					
+					auto father = iter->Get_father_pointer();
+
+					return //(!father.Is_transparent() && wid.Get_father_pointer() != iter->Get_father_pointer() && wid.Get_father_pointer() == father) ||
+						   !(wid.Is_radio_button() || wid.Is_checkbox()) || 
+						   ((wid.Is_radio_button() || wid.Is_checkbox()) && (wid.Has_Ws_group() || wid.Get_left() != iter->Get_left()));
 				});
 		}
 
@@ -67,6 +71,12 @@ vector< vector<widget> > sorting::getGroupedWidgets(const vector<widget> &elemen
 	}
 
 	return groupedWidgets;
+}
+
+vector<vector<widget>> sorting::getOrderedBuckets(vector<bucket> unorderedBuckets) {
+	sort(unorderedBuckets.begin(), unorderedBuckets.end(), comp);
+	
+	return unorderedBuckets;
 }
 
 vector<widget> sorting::getElementsFromBuckets(const vector<bucket>& sortedBuckets) {
