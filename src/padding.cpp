@@ -7,6 +7,7 @@
 #include "padding.h"
 #include "padding_for_min_distance.h"
 #include "padding_first_layer.h"
+#include "padding_groupbox_margins.h"
 #include "padding_issue_vertically.h"
 #include "padding_issue_horizontally.h"
 #include "padding_issue_top.h"
@@ -14,6 +15,7 @@
 #include "padding_issue_right.h"
 #include "padding_issue_left.h"
 #include "padding_issue_type_control.h"
+#include "padding_groupbox_issue.h"
 
 
 // Mark all the widgets as unchecked
@@ -31,10 +33,15 @@ void padding::check_padding(Dialog_box &dialog, Accumulator &Accumulate_Issues, 
 	padding_for_min_distance obj(dialogElements);
 	obj.check_padding_for_min_distance(Accumulate_Issues);
 
-	/*
+	/* Currently disabled !! 
+	   It is functional but there are too many issues
+
 	padding_first_layer first_layer(dialogElements);
 	first_layer.check_padding_first_layer(Accumulate_Issues);
 	*/
+
+	padding_groupbox_margins obj_groupbox(dialogElements);
+	obj_groupbox.check_padding_groupbox_margins(Accumulate_Issues);
 }
 
 
@@ -122,107 +129,3 @@ int padding::horizontal_distances[10][10] = {//0   1   2   3   4   5   6   7   8
 	{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },	//9 KEY_DROPDOWNLIST
 };
 //============================================
-
-
-// check the top distance between the uppermost controller of a groupbox and the groupbox itself
-// distance = abs (groupbox.top - controller.top)
-void padding::valid_check_top_groupbox(const widget& father, Accumulator &Accumulate_Issues)
-{
-	//copy the children pointers vector
-	vector<widget*> children = father.get_pointers_to_children();
-
-	//find the uppermost controller
-	auto child = **min_element(children.begin(), children.end(),
-		[](widget const*a, widget const *b) {
-		return a->Get_top() < b->Get_top();
-	});
-
-	//test the child and the groupbox, push issue if the required distance is not respected
-	if (child.Get_top() - father.Get_top() != group_box_top_child)
-	{
-
-		// increase nr of this type of issue
-		nrissues_padding_groupbox_top++;
-
-		unique_ptr<Issue> pointer = make_unique<padding_issue_top>(father, child);
-
-		Accumulate_Issues.push_issue(move(pointer));
-	}
-}
-
-//check the bottom distance between the lowermost controller of a groupbox and the groupbox itself
-//distance = abs (groupbox.bottom - controller.bottom)
-void padding::valid_check_bot_groupbox(const widget& father, Accumulator &Accumulate_Issues)
-{
-	//copy the lowermost pointers vector
-	vector<widget*> children = father.get_pointers_to_children();
-
-	auto child = **max_element(children.begin(), children.end(),
-		[](widget const*a, widget const *b) {
-		return a->Get_bottom() < b->Get_bottom();
-	});
-
-	//test the child and the groupbox, push issue if the required distance is not respected
-	if (father.Get_bottom() - child.Get_bottom() != group_box_bot_child)
-	{
-
-		// increase nr of this type of issue
-		nrissues_padding_groupbox_bot++;
-
-		unique_ptr<Issue> pointer = make_unique<padding_issue_bot>(father, child);
-
-		Accumulate_Issues.push_issue(move(pointer));
-	}
-}
-
-//check the left distance between the leftmost controller of a groupbox and the groupbox itself
-//distance = abs (groupbox.left - controller.left)
-void padding::valid_check_left_groupbox(const widget& father, Accumulator &Accumulate_Issues)
-{
-	//copy the children pointers vector
-	vector<widget*> children = father.get_pointers_to_children();
-
-	//find the leftmost controller
-	auto child = **min_element(children.begin(), children.end(),
-		[](widget const*a, widget const *b) {
-		return a->Get_left() < b->Get_left();
-	});
-
-	//test the child and the groupbox, push issue if the required distance is not respected
-	if (child.Get_left() - father.Get_left() != group_box_left1_child && child.Get_left() - father.Get_left() != group_box_left2_child)
-	{
-
-		// increase nr of this type of issue
-		nrissues_padding_groupbox_left++;
-
-		unique_ptr<Issue> pointer = make_unique<padding_issue_left>(father, child);
-
-		Accumulate_Issues.push_issue(move(pointer));
-	}
-}
-
-//check the right distance between the rightmost controller of a groupbox and the groupbox itself
-//distance = abs (groupbox.right - controller.right)
-void padding::valid_check_right_groupbox(const widget& father, Accumulator &Accumulate_Issues)
-{
-	//copy the children pointers vector
-	vector<widget*> children = father.get_pointers_to_children();
-
-	//find the rightmost controller
-	auto child = **max_element(children.begin(), children.end(),
-		[](widget const*a, widget const *b) {
-		return a->Get_right() < b->Get_right();
-	});
-
-	//test the child and the groupbox, push issue if the minimum required distance is not respected
-	if (father.Get_right() - child.Get_right() < minimum_dist_group_box_right_child)
-	{
-
-		// increase nr of this type of issue
-		nrissues_padding_groupbox_right++;
-
-		unique_ptr<Issue> pointer = make_unique<padding_issue_right>(father, child);
-
-		Accumulate_Issues.push_issue(move(pointer));
-	}
-}

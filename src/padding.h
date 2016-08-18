@@ -85,15 +85,6 @@ protected:
 	int computeHorizontalDistance(const widget &first, const widget &second) { return second.Get_left() - first.Get_right(); }
 
 
-	//groupbox validation
-	//distance validation between the groupbox and the 
-	//uppermost, lowermost, leftmost, rightmost controllers
-	//for each not respected distance, an issue is pushed
-	void valid_check_top_groupbox(const widget& father, Accumulator &Accumulate_Issues);
-	void valid_check_bot_groupbox(const widget& father, Accumulator &Accumulate_Issues);
-	void valid_check_left_groupbox(const widget& father, Accumulator &Accumulate_Issues);
-	void valid_check_right_groupbox(const widget& father, Accumulator &Accumulate_Issues);
-
 	//checkbutton & radiobutton validation
 	//if the distance in between two radio or check buttons from the same list is the same
 
