@@ -57,9 +57,9 @@ vector<sorting::bucket> sorting::getGroupedWidgets(const vector<widget>& element
 					
 					auto father = iter->Get_father_pointer();
 
-					return //(!father.Is_transparent() && wid.Get_father_pointer() != iter->Get_father_pointer() && wid.Get_father_pointer() == father) ||
-						   !(wid.Is_radio_button() || wid.Is_checkbox()) || 
-						   ((wid.Is_radio_button() || wid.Is_checkbox()) && (wid.Has_Ws_group() || wid.Get_left() != iter->Get_left()));
+					// TODO: check if the father of wid is a transparent groupbox
+					return !(wid.Is_radio_button() || wid.Is_checkbox()) || 
+						   ((wid.Is_radio_button() || wid.Is_checkbox()) && (wid.Has_Ws_group() || wid.Get_left() != iter->Get_left() || wid.Get_father_pointer() != iter->Get_father_pointer()));
 				});
 		}
 
