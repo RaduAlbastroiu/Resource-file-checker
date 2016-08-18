@@ -30,8 +30,8 @@ void padding::check_padding(Dialog_box &dialog, Accumulator &Accumulate_Issues, 
 
 	// Check padding from the first to the last controller
 	// The issue is reported only if the distance is smaller than minimum
-	padding_for_min_distance obj(dialogElements);
-	obj.check_padding_for_min_distance(Accumulate_Issues);
+	//padding_for_min_distance obj(dialogElements);
+	//obj.check_padding_for_min_distance(Accumulate_Issues);
 
 	/* Currently disabled !! 
 	   It is functional but there are too many issues

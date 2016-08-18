@@ -54,9 +54,16 @@ void padding_groupbox_margins::valid_check_top_groupbox(const widget& father, Ac
 	//copy the children pointers vector
 	vector<widget*> children = father.get_pointers_to_children();
 
+	// If there is a transparent groupbox in the father groupbox
+	// all the kids from the transparent groupbox are checked
+	complete_vect_of_kids(children);
+
 	widget child;
 
 	int MIN = Dialog_max_dimension;
+
+	if (children.size() < 2)
+		return;
 
 	for (auto it : children)
 	{
@@ -69,6 +76,10 @@ void padding_groupbox_margins::valid_check_top_groupbox(const widget& father, Ac
 			}
 		}
 	}
+
+	// No issue if the distance is too big
+	if (MIN - father.Get_top() > Dialog_maxim_comparison_distance)
+		return;
 
 	if (MIN != Dialog_max_dimension && 
 		((MIN - father.Get_top() < Dialog_top_min_margin) || (MIN - father.Get_top() > Dialog_top_max_margin)))
@@ -89,9 +100,16 @@ void padding_groupbox_margins::valid_check_bot_groupbox(const widget& father, Ac
 	//copy the children pointers vector
 	vector<widget*> children = father.get_pointers_to_children();
 
+	// If there is a transparent groupbox in the father groupbox
+	// all the kids from the transparent groupbox are checked
+	complete_vect_of_kids(children);
+	
 	widget child;
 
 	int MAX = Dialog_min_dimension;
+
+	if (children.size() < 2)
+		return;
 
 	for (auto it : children)
 	{
@@ -104,6 +122,10 @@ void padding_groupbox_margins::valid_check_bot_groupbox(const widget& father, Ac
 			}
 		}
 	}
+
+	// No issue if the distance is too big
+	if (father.Get_bottom() - MAX > Dialog_maxim_comparison_distance)
+		return;
 
 	if (MAX != Dialog_min_dimension &&
 		((father.Get_bottom() - MAX < Dialog_bot_min_margin) || (father.Get_bottom() - MAX > Dialog_bot_max_margin)))
@@ -124,9 +146,16 @@ void padding_groupbox_margins::valid_check_left_groupbox(const widget& father, A
 	//copy the children pointers vector
 	vector<widget*> children = father.get_pointers_to_children();
 
+	// If there is a transparent groupbox in the father groupbox
+	// all the kids from the transparent groupbox are checked
+	complete_vect_of_kids(children);
+
 	widget child;
 
 	int MIN = Dialog_max_dimension;
+
+	if (children.size() < 2)
+		return;
 
 	for (auto it : children)
 	{
@@ -139,6 +168,10 @@ void padding_groupbox_margins::valid_check_left_groupbox(const widget& father, A
 			}
 		}
 	}
+
+	// No issue if the distance is too big
+	if (MIN - father.Get_left() > Dialog_maxim_comparison_distance)
+		return;
 
 	if (MIN != Dialog_max_dimension &&
 		(( MIN - father.Get_left() < Dialog_left_min_margin) || (MIN - father.Get_left() > Dialog_left_max_margin)))
@@ -159,9 +192,16 @@ void padding_groupbox_margins::valid_check_right_groupbox(const widget& father, 
 	//copy the children pointers vector
 	vector<widget*> children = father.get_pointers_to_children();
 
+	// If there is a transparent groupbox in the father groupbox
+	// all the kids from the transparent groupbox are checked
+	complete_vect_of_kids(children);
+
 	widget child;
 
 	int MAX = Dialog_min_dimension;
+
+	if (children.size() < 2)
+		return;
 
 	for (auto it : children)
 	{
@@ -174,6 +214,10 @@ void padding_groupbox_margins::valid_check_right_groupbox(const widget& father, 
 			}
 		}
 	}
+
+	// No issue if the distance is too big
+	if (father.Get_right() - MAX > Dialog_maxim_comparison_distance)
+		return;
 
 	if (MAX != Dialog_min_dimension &&
 		((father.Get_right() - MAX < Dialog_rigt_min_margin) || (father.Get_right() - MAX > Dialog_right_max_margin)))
@@ -202,4 +246,25 @@ bool padding_groupbox_margins::is_on_white_list(const widget & controller)
 		return true;
 
 	return false;
+}
+
+void padding_groupbox_margins::complete_vect_of_kids(vector<widget*> &children)
+{
+	for (int i = 0; i < children.size(); i++)
+	{
+		if (children[i]->Is_groupbox() && children[i]->Is_transparent())
+		{
+			if (children[i]->get_pointers_to_children().size())
+			{
+				for (auto it_transparent : children[i]->get_pointers_to_children())
+				{
+					if (it_transparent->Get_bottom() <= children[i]->Get_bottom() &&
+						it_transparent->Get_top() >= children[i]->Get_top() &&
+						it_transparent->Get_left() >= children[i]->Get_left() &&
+						it_transparent->Get_right() <= children[i]->Get_right())
+						children.push_back(it_transparent);
+				}
+			}
+		}
+	}
 }

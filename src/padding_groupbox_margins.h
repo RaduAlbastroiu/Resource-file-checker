@@ -18,6 +18,7 @@
 #define Dialog_right_max_margin 10
 #define Dialog_bot_min_margin 7
 #define Dialog_bot_max_margin 7
+#define Dialog_maxim_comparison_distance 20
 
 
 class padding_groupbox_margins : public padding
@@ -43,5 +44,7 @@ private:
 	void valid_check_right_groupbox(const widget& father, Accumulator &Accumulate_Issues);
 
 	bool is_on_white_list(const widget& controller);
+
+	void complete_vect_of_kids(vector<widget*> &children);
 
 };
