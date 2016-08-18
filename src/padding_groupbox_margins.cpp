@@ -62,6 +62,9 @@ void padding_groupbox_margins::valid_check_top_groupbox(const widget& father, Ac
 
 	int MIN = Dialog_max_dimension;
 
+	if (children.size() < 2)
+		return;
+
 	for (auto it : children)
 	{
 		if (it->Get_top() < MIN && it->Get_top() >= father.Get_top())
@@ -73,6 +76,10 @@ void padding_groupbox_margins::valid_check_top_groupbox(const widget& father, Ac
 			}
 		}
 	}
+
+	// No issue if the distance is too big
+	if (MIN - father.Get_top() > Dialog_maxim_comparison_distance)
+		return;
 
 	if (MIN != Dialog_max_dimension && 
 		((MIN - father.Get_top() < Dialog_top_min_margin) || (MIN - father.Get_top() > Dialog_top_max_margin)))
@@ -101,6 +108,9 @@ void padding_groupbox_margins::valid_check_bot_groupbox(const widget& father, Ac
 
 	int MAX = Dialog_min_dimension;
 
+	if (children.size() < 2)
+		return;
+
 	for (auto it : children)
 	{
 		if (it->Get_bottom() > MAX && it->Get_bottom() <= father.Get_bottom())
@@ -112,6 +122,10 @@ void padding_groupbox_margins::valid_check_bot_groupbox(const widget& father, Ac
 			}
 		}
 	}
+
+	// No issue if the distance is too big
+	if (father.Get_bottom() - MAX > Dialog_maxim_comparison_distance)
+		return;
 
 	if (MAX != Dialog_min_dimension &&
 		((father.Get_bottom() - MAX < Dialog_bot_min_margin) || (father.Get_bottom() - MAX > Dialog_bot_max_margin)))
@@ -140,6 +154,9 @@ void padding_groupbox_margins::valid_check_left_groupbox(const widget& father, A
 
 	int MIN = Dialog_max_dimension;
 
+	if (children.size() < 2)
+		return;
+
 	for (auto it : children)
 	{
 		if (it->Get_left() < MIN && it->Get_left() >= father.Get_left())
@@ -151,6 +168,10 @@ void padding_groupbox_margins::valid_check_left_groupbox(const widget& father, A
 			}
 		}
 	}
+
+	// No issue if the distance is too big
+	if (MIN - father.Get_left() > Dialog_maxim_comparison_distance)
+		return;
 
 	if (MIN != Dialog_max_dimension &&
 		(( MIN - father.Get_left() < Dialog_left_min_margin) || (MIN - father.Get_left() > Dialog_left_max_margin)))
@@ -179,6 +200,9 @@ void padding_groupbox_margins::valid_check_right_groupbox(const widget& father, 
 
 	int MAX = Dialog_min_dimension;
 
+	if (children.size() < 2)
+		return;
+
 	for (auto it : children)
 	{
 		if (it->Get_right() > MAX && it->Get_right() <= father.Get_right())
@@ -190,6 +214,10 @@ void padding_groupbox_margins::valid_check_right_groupbox(const widget& father, 
 			}
 		}
 	}
+
+	// No issue if the distance is too big
+	if (father.Get_right() - MAX > Dialog_maxim_comparison_distance)
+		return;
 
 	if (MAX != Dialog_min_dimension &&
 		((father.Get_right() - MAX < Dialog_rigt_min_margin) || (father.Get_right() - MAX > Dialog_right_max_margin)))

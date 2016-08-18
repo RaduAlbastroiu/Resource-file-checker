@@ -18,6 +18,7 @@
 #define Dialog_right_max_margin 10
 #define Dialog_bot_min_margin 7
 #define Dialog_bot_max_margin 7
+#define Dialog_maxim_comparison_distance 20
 
 
 class padding_groupbox_margins : public padding
